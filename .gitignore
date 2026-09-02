@@ -1,0 +1,30 @@
+# Build artifacts
+*.exe
+*.obj
+*.o
+*.res.o
+*.pdb
+*.ilk
+*.idb
+*.log
+*.tlog
+*.lastbuildstate
+*.unsuccessfulbuild
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+ipch/
+Debug/
+Release/
+x64/
+x86/
+
+# Temp files
+*.tmp
+*~
