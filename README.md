@@ -72,7 +72,7 @@ labs/
 
 ## Технології
 
-C++ (C++17), Visual Studio 2022, Win32 API
+C++ (C++26, /std:c++latest), Visual Studio 2022, Win32 API
 
 ## Структура
 
