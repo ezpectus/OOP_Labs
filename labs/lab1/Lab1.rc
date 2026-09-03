@@ -1,0 +1,19 @@
+// Lab1.rc — main window resources
+#include "resource.h"
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit", IDM_EXIT
+    END
+    POPUP "&Work"
+    BEGIN
+        MENUITEM "Work &1", ID_WORK1
+        MENUITEM "Work &2", ID_WORK2
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About", IDM_ABOUT
+    END
+END
