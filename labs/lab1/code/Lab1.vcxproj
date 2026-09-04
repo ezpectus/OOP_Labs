@@ -77,12 +77,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Lab1.cpp" />
+    <ClCompile Include="src\module1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\module1.h" />
+    <ClInclude Include="src\module1_resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\Lab1.rc" />
+    <ResourceCompile Include="res\module1.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -5,9 +5,13 @@
 #include <windows.h>
 #include <tchar.h>
 #include "resource.h"
+#include "module1.h"
 
 static TCHAR szWindowClass[] = _T("Lab1WindowClass");
 static TCHAR szTitle[] = _T("Lab 1 — Stepanenko Denys, IM-051");
+
+static int   g_number = 0;
+static bool  g_showNumber  = false;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -19,9 +23,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (wmId)
         {
         case ID_WORK1:
-            MessageBox(hWnd, _T("Work 1 — not implemented yet"),
-                       _T("Work"), MB_OK | MB_ICONINFORMATION);
-            break;
+        {
+            int val;
+            if (Func_MOD1(hWnd, &val) == 1)
+            {
+                g_number = val;
+                g_showNumber = true;
+                InvalidateRect(hWnd, NULL, TRUE);
+            }
+        }
+        break;
 
         case ID_WORK2:
             MessageBox(hWnd, _T("Work 2 — not implemented yet"),
@@ -48,7 +59,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        TextOut(hdc, 20, 30, _T("Select Work -> Work 1 or Work 2 from menu"), 43);
+
+        if (g_showNumber)
+        {
+            TCHAR buf[64];
+            _stprintf_s(buf, 64, _T("Selected number: %d"), g_number);
+            TextOut(hdc, 20, 30, buf, (int)_tcslen(buf));
+        }
+        else
+        {
+            TextOut(hdc, 20, 30, _T("Select Work -> Work 1 or Work 2 from menu"), 43);
+        }
+
         EndPaint(hWnd, &ps);
     }
     break;
