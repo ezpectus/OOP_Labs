@@ -1,0 +1,14 @@
+// module2.rc — dialog resource for module 2 (scrollbar input)
+#include "module2_resource.h"
+
+IDD_DIALOG2 DIALOGEX 0, 0, 280, 140
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Work 2 — Scrollbar Input (1-100)"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Drag the scrollbar to select a number (1-100):",-1,10,10,260,12
+    SCROLLBAR       IDC_SCROLLBAR,10,30,260,15,SBS_HORZ
+    CTEXT           "50",IDC_SCROLL_VALUE,10,55,260,14
+    PUSHBUTTON      "OK",IDC_BTN_OK,160,115,50,14
+    PUSHBUTTON      "Cancel",IDC_BTN_CANCEL,220,115,50,14
+END
