@@ -1,0 +1,14 @@
+// module2.rc — dialog resource for module 2 (wizard window 1)
+#include <windows.h>
+#include "module2_resource.h"
+
+IDD_DIALOG2 DIALOGEX 0, 0, 280, 110
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Work 2 — Wizard (Step 1 of 2)"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "This is the first window of the wizard.",-1,10,12,260,12
+    LTEXT           "Click 'Next >' to go to the second window.",-1,10,28,260,12
+    PUSHBUTTON      "Next >",IDC_BTN_NEXT,110,80,50,14
+    PUSHBUTTON      "Cancel",IDC_BTN_CANCEL,220,80,50,14
+END

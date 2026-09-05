@@ -6,12 +6,15 @@
 #include <tchar.h>
 #include "resource.h"
 #include "module1.h"
+#include "module2.h"
+#include "module3.h"
 
 static TCHAR szWindowClass[] = _T("Lab1WindowClass");
 static TCHAR szTitle[] = _T("Lab 1 — Stepanenko Denys, IM-051");
 
 static int   g_number = 0;
 static bool  g_showNumber  = false;
+static bool  g_wizardDone  = false;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -35,9 +38,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
         case ID_WORK2:
-            MessageBox(hWnd, _T("Work 2 — not implemented yet"),
-                       _T("Work"), MB_OK | MB_ICONINFORMATION);
-            break;
+        {
+            // Wizard: module2 = window 1, module3 = window 2
+            // Func_MOD2: 1 = Next, 0 = Cancel
+            // Func_MOD3: 2 = Yes, 0 = Cancel
+            int r = Func_MOD2(hWnd);
+            if (r == 1)
+                r = Func_MOD3(hWnd);
+            if (r == 2)                    // Yes - wizard finished
+            {
+                g_wizardDone = true;
+                InvalidateRect(hWnd, NULL, TRUE);
+            }
+        }
+        break;
 
         case IDM_EXIT:
             DestroyWindow(hWnd);
@@ -65,6 +79,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             TCHAR buf[64];
             _stprintf_s(buf, 64, _T("Selected number: %d"), g_number);
             TextOut(hdc, 20, 30, buf, (int)_tcslen(buf));
+        }
+        else if (g_wizardDone)
+        {
+            TextOut(hdc, 20, 30, _T("Wizard finished — 'Yes' was pressed."), 36);
         }
         else
         {
