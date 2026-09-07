@@ -41,10 +41,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             // Wizard: module2 = window 1, module3 = window 2
             // Func_MOD2: 1 = Next, 0 = Cancel
-            // Func_MOD3: 2 = Yes, 0 = Cancel
+            // Func_MOD3: 2 = Yes, -1 = Back, 0 = Cancel
             int r = Func_MOD2(hWnd);
-            if (r == 1)
+            while (r == 1)
+            {
                 r = Func_MOD3(hWnd);
+                if (r == -1)
+                    r = Func_MOD2(hWnd);   // Back - reopen window 1
+            }
             if (r == 2)                    // Yes - wizard finished
             {
                 g_wizardDone = true;
