@@ -1,0 +1,29 @@
+// Lab3.rc — main window resources
+#include "resource.h"
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit", IDM_EXIT
+    END
+    POPUP "&Objects"
+    BEGIN
+        MENUITEM "&Point",     IDM_POINT
+        MENUITEM "&Line",      IDM_LINE
+        MENUITEM "&Rectangle", IDM_RECT
+        MENUITEM "&Ellipse",   IDM_ELLIPSE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About", IDM_ABOUT
+    END
+END
+
+IDR_TOOLBAR TOOLBAR 16, 16
+BEGIN
+    BUTTON IDM_POINT
+    BUTTON IDM_LINE
+    BUTTON IDM_RECT
+    BUTTON IDM_ELLIPSE
+END
