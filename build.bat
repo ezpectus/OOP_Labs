@@ -19,4 +19,17 @@ g++ -municode -o Lab1.exe Lab1.o module1.o module2.o module3.o Lab1.res.o module
 echo Lab1.exe built.
 
 echo.
+echo --- Lab 2 ---
+cd /d "F:\VSC projects\OOP_Labs\labs\lab2\code\src"
+windres -c 65001 --output-format=coff -I . -i ..\res\Lab2.rc -o Lab2.res.o
+g++ %CXXFLAGS% -c Lab2.cpp -o Lab2.o
+g++ %CXXFLAGS% -c shape.cpp -o shape.o
+g++ %CXXFLAGS% -c point.cpp -o point.o
+g++ %CXXFLAGS% -c line.cpp -o line.o
+g++ %CXXFLAGS% -c rect.cpp -o rect.o
+g++ %CXXFLAGS% -c ellipse.cpp -o ellipse.o
+g++ -municode -o Lab2.exe Lab2.o shape.o point.o line.o rect.o ellipse.o Lab2.res.o %LDFLAGS%
+echo Lab2.exe built.
+
+echo.
 echo === Done ===
