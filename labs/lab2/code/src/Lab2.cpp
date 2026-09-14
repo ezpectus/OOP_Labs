@@ -1,6 +1,9 @@
 // Lab2.cpp - main file
 // Lab 2: Graphics editor with Shape hierarchy
 // Stepanenko Denys, IM-051, 2026
+// Variant: J=13, static array N=113, solid red rubber band,
+//   rect: center->corner + no fill, ellipse: 2 corners + yellow fill,
+//   type indicator in window title
 
 #include <windows.h>
 #include <tchar.h>
@@ -22,6 +25,26 @@ static int shapeCount = 0;
 static int currentType = IDM_POINT;
 static bool isDrawing = false;
 static Shape* pTempShape = NULL;
+
+static const TCHAR* TypeName(int id)
+{
+    switch (id)
+    {
+    case IDM_POINT:   return _T("Point");
+    case IDM_LINE:    return _T("Line");
+    case IDM_RECT:    return _T("Rectangle");
+    case IDM_ELLIPSE: return _T("Ellipse");
+    default:          return _T("?");
+    }
+}
+
+// Type marker in window title (13 mod 2 = 1)
+static void UpdateTitle(HWND hWnd)
+{
+    TCHAR buf[128];
+    _stprintf_s(buf, 128, _T("Lab 2 — Graphics Editor — [%s]"), TypeName(currentType));
+    SetWindowText(hWnd, buf);
+}
 
 static Shape* CreateShape(int type, int x1, int y1, int x2, int y2)
 {
@@ -62,6 +85,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_CREATE:
+        UpdateTitle(hWnd);
+        break;
+
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
@@ -72,13 +99,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_RECT:
         case IDM_ELLIPSE:
             currentType = wmId;
+            UpdateTitle(hWnd);
             break;
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
         case IDM_ABOUT:
             MessageBox(hWnd,
-                _T("Lab 2 — Graphics Editor\nStepanenko Denys, IM-051"),
+                _T("Lab 2 — Graphics Editor\nStepanenko Denys, IM-051\nJ=13: static array, red rubber band, no-fill rect, yellow ellipse"),
                 _T("About"), MB_OK | MB_ICONINFORMATION);
             break;
         default:
