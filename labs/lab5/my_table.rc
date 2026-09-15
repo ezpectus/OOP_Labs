@@ -1,0 +1,10 @@
+// my_table.rc — table dialog resource (independent)
+#include "my_table.h"
+
+IDD_TABLE_DIALOG DIALOGEX 0, 0, 300, 200
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE
+CAPTION "Objects Table"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LISTBOX IDC_TABLE_LIST, 5, 5, 290, 170, WS_VSCROLL | WS_TABSTOP | LBS_NOTIFY
+END
