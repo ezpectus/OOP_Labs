@@ -32,6 +32,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 g_number = val;
                 g_showNumber = true;
+                g_wizardDone = false;
                 InvalidateRect(hWnd, NULL, TRUE);
             }
         }
@@ -52,6 +53,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (r == 2)                    // Yes - wizard finished
             {
                 g_wizardDone = true;
+                g_showNumber = false;
                 InvalidateRect(hWnd, NULL, TRUE);
             }
         }
@@ -160,3 +162,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     return (int)msg.wParam;
 }
+
+// LAUNCH (PowerShell):
+// cd "F:\VSC projects\OOP_Labs\labs\lab1\code\src"
+// .\Lab1.exe

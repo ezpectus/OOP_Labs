@@ -15,16 +15,39 @@
 .vs/
 *.suo
 *.user
+*.userosscache
+*.sln.docstates
 *.aps
 *.ncb
 *.opendb
 *.opensdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
 ipch/
 Debug/
 Release/
 x64/
 x86/
+*.dep
+*.mak
+
+# ClassDiagramTool
+ClassDiagramTool/
+
+# TextProcessor 
+TextProcessor/
+
+# Linux labs (separate course)
+linux-labs/
+
+# Internal workflow
+WORKFLOW.md
+
+# Theory / defense notes (not for repo)
+Theory/
 
 # Temp files
 *.tmp
 *~
+.windsurf/stages/

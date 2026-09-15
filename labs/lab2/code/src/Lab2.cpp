@@ -121,6 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         int y = HIWORD(lParam);
         isDrawing = true;
         pTempShape = CreateShape(currentType, x, y, x, y);
+        SetCapture(hWnd);   // keep mouse msgs even if cursor leaves window
     }
     break;
 
@@ -156,6 +157,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             delete pTempShape;
             pTempShape = NULL;
             isDrawing = false;
+            ReleaseCapture();
             InvalidateRect(hWnd, NULL, FALSE);
         }
     }
@@ -194,6 +196,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
     case WM_DESTROY:
+        for (int i = 0; i < shapeCount; i++)
+            delete pcshape[i];
+        if (pTempShape) delete pTempShape;
         PostQuitMessage(0);
         break;
 
@@ -256,3 +261,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     return (int)msg.wParam;
 }
+
+// LAUNCH (PowerShell):
+// cd "F:\VSC projects\OOP_Labs\labs\lab2\code\src"
+// .\Lab2.exe
