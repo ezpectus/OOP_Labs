@@ -1,0 +1,38 @@
+// Lab5.rc — main window resources
+#include "resource.h"
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Save to File", IDM_FILE_SAVE
+        MENUITEM "E&xit", IDM_EXIT
+    END
+    POPUP "&Objects"
+    BEGIN
+        MENUITEM "&Point",          IDM_POINT
+        MENUITEM "&Line",           IDM_LINE
+        MENUITEM "&Rectangle",      IDM_RECT
+        MENUITEM "&Ellipse",        IDM_ELLIPSE
+        MENUITEM "Line w/ &Circles", IDM_LINECIRC
+        MENUITEM "&Cube Wireframe", IDM_CUBE
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Table", IDM_VIEW_TABLE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About", IDM_ABOUT
+    END
+END
+
+IDR_TOOLBAR TOOLBAR 16, 16
+BEGIN
+    BUTTON IDM_POINT
+    BUTTON IDM_LINE
+    BUTTON IDM_RECT
+    BUTTON IDM_ELLIPSE
+    BUTTON IDM_LINECIRC
+    BUTTON IDM_CUBE
+END
