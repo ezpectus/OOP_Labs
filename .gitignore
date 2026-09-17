@@ -50,4 +50,4 @@ Theory/
 # Temp files
 *.tmp
 *~
-.windsurf/stages/
+.windsurf/

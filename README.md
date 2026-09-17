@@ -39,7 +39,7 @@ C++26, Win32 API, MinGW (LLVM-MinGW g++)
 ## Запуск
 
 ```powershell
-cd "F:\VSC projects\OOP_Labs\labs\labN\code\src"
+cd labs\labN\code\src
 .\LabN.exe
 ```
 
