@@ -489,7 +489,7 @@ Lab2.rc
 
 ### Головне вікно редактора
 
-<img src="../screenshots/main.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/main.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 1. Головне вікно графічного редактора з меню «Об'єкти»_
 
@@ -497,7 +497,7 @@ _Рис. 1. Головне вікно графічного редактора з
 
 ### Малювання крапки
 
-<img src="../screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 2. Малювання крапки (PointShape)_
 
@@ -505,7 +505,7 @@ _Рис. 2. Малювання крапки (PointShape)_
 
 ### Малювання лінії з «гумовим» слідом
 
-<img src="../screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 3. Малювання лінії з суцільним чорним «гумовим» слідом_
 
@@ -513,7 +513,7 @@ _Рис. 3. Малювання лінії з суцільним чорним «�
 
 ### Малювання прямокутника
 
-<img src="../screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 4. Малювання прямокутника з помаранчевим заповненням (ввід двома кутами)_
 
@@ -521,7 +521,7 @@ _Рис. 4. Малювання прямокутника з помаранчев�
 
 ### Малювання еліпса
 
-<img src="../screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/rectangles.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 5. Малювання еліпса з білим заповненням (ввід від центру до кута)_
 

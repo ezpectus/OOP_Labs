@@ -514,7 +514,7 @@ module2.rc
 
 ### Головне вікно програми
 
-<img src="../screenshots/main.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/main.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 1. Головне вікно програми з меню File, Work, Help_
 
@@ -522,7 +522,7 @@ _Рис. 1. Головне вікно програми з меню File, Work, H
 
 ### Вікно діалогу «Робота1»
 
-<img src="../screenshots/base_work1.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/base_work1.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 2. Вікно діалогу модуля 1 — введення тексту (варіант В1=0)_
 
@@ -530,7 +530,7 @@ _Рис. 2. Вікно діалогу модуля 1 — введення тек
 
 ### Результат «Робота1» у головному вікні
 
-<img src="../screenshots/w1_done.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/w1_done.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 3. Виведення введеного тексту у головному вікні_
 
@@ -538,7 +538,7 @@ _Рис. 3. Виведення введеного тексту у головно
 
 ### Вікно діалогу «Робота2»
 
-<img src="../screenshots/base_w2.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/base_w2.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 4. Вікно діалогу модуля 2 — повзунок скролінгу (варіант В2=1)_
 
@@ -546,7 +546,7 @@ _Рис. 4. Вікно діалогу модуля 2 — повзунок скр
 
 ### Результат «Робота2» у головному вікні
 
-<img src="../screenshots/w2_done.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/w2_done.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 5. Виведення вибраного числа у головному вікні_
 

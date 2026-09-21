@@ -383,7 +383,7 @@ my_table.rc
 
 ### Головне вікно з меню View/Table
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 1. Головне вікно з меню «View → Table» та «File → Save»_
 
@@ -391,7 +391,7 @@ _Рис. 1. Головне вікно з меню «View → Table» та «File
 
 ### Немодальне вікно таблиці
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 2. Немодальне вікно таблиці об'єктів (listbox з координатами)_
 
@@ -399,7 +399,7 @@ _Рис. 2. Немодальне вікно таблиці об'єктів (list
 
 ### Головне вікно + таблиця одночасно
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 3. Багатовіконний інтерфейс — головне вікно та таблиця одночасно_
 
@@ -407,7 +407,7 @@ _Рис. 3. Багатовіконний інтерфейс — головне �
 
 ### Збереження у файл
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 4. Збереження об'єктів у файл shapes.txt (tab-separated)_
 

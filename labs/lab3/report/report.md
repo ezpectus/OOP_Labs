@@ -362,7 +362,7 @@ Lab3.rc
 
 ### Головне вікно з Toolbar
 
-<img src="../screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 1. Головне вікно програми з Toolbar та меню «Об'єкти»_
 
@@ -370,7 +370,7 @@ _Рис. 1. Головне вікно програми з Toolbar та меню 
 
 ### Toolbar з підказкою (tooltip)
 
-<img src="../screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 2. Toolbar з підказкою при наведенні курсора на кнопку_
 
@@ -378,7 +378,7 @@ _Рис. 2. Toolbar з підказкою при наведенні курсор
 
 ### Малювання прямокутника (сіре заповнення, від центру)
 
-<img src="../screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 3. Малювання прямокутника з сірим заповненням (ввід від центру до кута)_
 
@@ -386,7 +386,7 @@ _Рис. 3. Малювання прямокутника з сірим запов
 
 ### Малювання еліпса (без заповнення, двома кутами)
 
-<img src="../screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 4. Малювання еліпса без заповнення (ввід двома протилежними кутами)_
 
@@ -394,7 +394,7 @@ _Рис. 4. Малювання еліпса без заповнення (вві�
 
 ### Позначка типу у заголовку вікна
 
-<img src="../screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="screenshots/lab_3_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 5. Позначка поточного типу об'єкта у заголовку вікна_
 
