@@ -373,7 +373,7 @@ cube.h
 
 ### Головне вікно з Toolbar (6 кнопок)
 
-<img src="../screenshots/main with some cubes.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_with_some_cubes.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 1. Головне вікно з Toolbar з 6 кнопками та меню_
 
@@ -381,7 +381,7 @@ _Рис. 1. Головне вікно з Toolbar з 6 кнопками та ме
 
 ### Малювання лінії з кружечками
 
-<img src="../screenshots/main with some cubes.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_with_some_cubes.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 2. Фігура «лінія з кружечками» (LineWithCircles — множинне успадкування)_
 
@@ -389,7 +389,7 @@ _Рис. 2. Фігура «лінія з кружечками» (LineWithCircles
 
 ### Малювання каркаса куба
 
-<img src="../screenshots/main with some cubes.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_with_some_cubes.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 3. Фігура «каркас куба» (CubeWireframe — множинне успадкування)_
 
@@ -397,7 +397,7 @@ _Рис. 3. Фігура «каркас куба» (CubeWireframe — множи
 
 ### Усі 6 типів фігур
 
-<img src="../screenshots/main with some cubes.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_with_some_cubes.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 4. Усі 6 типів фігур: крапка, лінія, прямокутник, еліпс, лінія з кружечками, каркас куба_
 
@@ -405,7 +405,7 @@ _Рис. 4. Усі 6 типів фігур: крапка, лінія, прямо
 
 ### Toolbar з підказкою
 
-<img src="../screenshots/main with some cubes.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_with_some_cubes.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 5. Toolbar з підказкою (tooltip) при наведенні на кнопку_
 

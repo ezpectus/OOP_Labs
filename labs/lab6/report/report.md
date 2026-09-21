@@ -303,7 +303,7 @@ Lab6                Object2              Object3
 
 ### Вікно менеджера Lab6
 
-<img src="../screenshots/main frame.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_frame.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 1. Вікно менеджера Lab6 — ввод параметрів nPoint, xMin, xMax, yMin, yMax_
 
@@ -311,7 +311,7 @@ _Рис. 1. Вікно менеджера Lab6 — ввод параметрів
 
 ### Три вікна одночасно
 
-<img src="../screenshots/data 2 and 3 with stats.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/data_2_and_3_with_stats.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 2. Три вікна одночасно: менеджер (зліва), Object2 (справа вгорі), Object3 (справа внизу)_
 
@@ -319,7 +319,7 @@ _Рис. 2. Три вікна одночасно: менеджер (зліва),
 
 ### Object2 — згенеровані дані
 
-<img src="../screenshots/data 2 and 3 with stats.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/data_2_and_3_with_stats.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 3. Програма Object2 — список згенерованих пар (x, y)_
 
@@ -327,7 +327,7 @@ _Рис. 3. Програма Object2 — список згенерованих �
 
 ### Object3 — графік y=f(x)
 
-<img src="../screenshots/data 2 and 3 with stats.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/data_2_and_3_with_stats.png" style="width: 100%; max-width: 800px;">
 
 _Рис. 4. Програма Object3 — графік y=f(x) з осями координат та підписами_
 
