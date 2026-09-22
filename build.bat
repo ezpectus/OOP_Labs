@@ -2,7 +2,7 @@
 echo === Building labs with MinGW (g++) ===
 
 set CXXFLAGS=-std=c++26 -DUNICODE -D_UNICODE -municode -O2
-set LDFLAGS=-lgdi32 -luser32 -lcomctl32
+set LDFLAGS=-mwindows -lgdi32 -luser32 -lcomctl32 -lcomdlg32
 
 echo.
 echo --- Lab 1 ---

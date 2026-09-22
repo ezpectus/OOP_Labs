@@ -29,8 +29,17 @@ C++26, Win32 API, MinGW (LLVM-MinGW g++)
 
 ## Збірка
 
+Кожна лаба збирається MinGW g++ у три кроки:
+
+1. `g++ -c file.cpp -o file.o` — компіляція кожного .cpp в об'єктний файл
+2. `windres -c 65001 file.rc -o file.res.o` — компіляція ресурсів (меню, діалоги)
+3. `g++ -municode -mwindows -o Lab.exe *.o *.res.o -lgdi32 -luser32 -lcomctl32` — лінкування в exe
+
+Прапорці: `-municode` — вхід через wWinMain (Unicode); `-mwindows` — GUI-застосунок
+без консолі; `-l*` — системні бібліотеки Win32; `-std=c++26` — стандарт мови.
+
 ```powershell
-# Зібрати всі лаби одразу:
+# Зібрати всі лаби одразу (з кореня репо):
 .\build.bat
 
 # Або окремо — див. README.md у кожній папці labN/
