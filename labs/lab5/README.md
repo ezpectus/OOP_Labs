@@ -20,11 +20,27 @@ lab5/
     └── res/           ← Lab5.rc, my_table.rc
 ```
 
-## Launch (PowerShell)
+## Build & Run (MinGW / g++)
+
+### Build
 ```powershell
-cd "F:\VSC projects\OOP_Labs\labs\lab5\code"
-msbuild Lab5.sln /p:Configuration=Debug /p:Platform=x64
-.\x64\Debug\Lab5.exe
+cd "F:\VSC projects\OOP_Labs\labs\lab5\code\src"
+windres --output-format=coff -I . -i ..\res\Lab5.rc -o Lab5.res.o
+windres --output-format=coff -I . -i ..\res\my_table.rc -o my_table.res.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Lab5.cpp -o Lab5.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c my_editor.cpp -o my_editor.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c my_table.cpp -o my_table.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c shape.cpp -o shape.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c point.cpp -o point.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
+g++ -municode -o Lab5.exe Lab5.o my_editor.o my_table.o shape.o point.o line.o rect.o ellipse.o Lab5.res.o my_table.res.o -lgdi32 -luser32 -lcomctl32
+```
+
+### Run
+```powershell
+.\Lab5.exe
 ```
 
 ## Student

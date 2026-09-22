@@ -7,6 +7,7 @@
 #include <tchar.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 static TCHAR szClass[] = _T("Lab6Manager");
 static TCHAR szTitle[] = _T("Lab 6 — Manager — Stepanenko Denys, IM-051");
@@ -39,9 +40,9 @@ static void LaunchPrograms(HWND hWnd)
     TCHAR* p = _tcsrchr(path2, _T('\\'));
     if (p) *p = 0;
 
-    _stprintf_s(path3, MAX_PATH, _T("%s\\Object2.exe"), path2);
+    swprintf(path3, MAX_PATH, L"%s\\Object2.exe", path2);
     TCHAR path4[MAX_PATH];
-    _stprintf_s(path4, MAX_PATH, _T("%s\\Object3.exe"), path2);
+    swprintf(path4, MAX_PATH, L"%s\\Object3.exe", path2);
 
     // Check if already running
     hObj2 = FindWindow(_T("Object2Class"), NULL);
@@ -50,15 +51,23 @@ static void LaunchPrograms(HWND hWnd)
     if (!hObj2)
     {
         TCHAR cmd[512];
-        _stprintf_s(cmd, 512, _T("\"%s\" %ld"), path3, (LONG)hWnd);
-        WinExec(cmd, SW_SHOWNORMAL);
+        swprintf(cmd, 512, L"\"%s\" %lld", path3, (long long)hWnd);
+        STARTUPINFO si = { sizeof(si) };
+        PROCESS_INFORMATION pi;
+        CreateProcess(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+        if (pi.hProcess) CloseHandle(pi.hProcess);
+        if (pi.hThread) CloseHandle(pi.hThread);
     }
 
     if (!hObj3)
     {
         TCHAR cmd[512];
-        _stprintf_s(cmd, 512, _T("\"%s\" %ld"), path4, (LONG)hWnd);
-        WinExec(cmd, SW_SHOWNORMAL);
+        swprintf(cmd, 512, L"\"%s\" %lld", path4, (long long)hWnd);
+        STARTUPINFO si = { sizeof(si) };
+        PROCESS_INFORMATION pi;
+        CreateProcess(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+        if (pi.hProcess) CloseHandle(pi.hProcess);
+        if (pi.hThread) CloseHandle(pi.hThread);
     }
 
     // Wait a moment for windows to appear
@@ -168,6 +177,5 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 // LAUNCH (PowerShell):
-// cd "F:\VSC projects\OOP_Labs\labs\lab6\code"
-// msbuild Lab6.sln /p:Configuration=Debug /p:Platform=x64
-// .\x64\Debug\Lab6.exe
+// cd "F:\VSC projects\OOP_Labs\labs\lab6\code\Lab6\src"
+// .\Lab6.exe

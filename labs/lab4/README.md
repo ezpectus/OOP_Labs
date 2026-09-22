@@ -22,11 +22,25 @@ lab4/
     └── res/           ← Lab4.rc
 ```
 
-## Launch (PowerShell)
+## Build & Run (MinGW / g++)
+
+### Build
 ```powershell
-cd "F:\VSC projects\OOP_Labs\labs\lab4\code"
-msbuild Lab4.sln /p:Configuration=Debug /p:Platform=x64
-.\x64\Debug\Lab4.exe
+cd "F:\VSC projects\OOP_Labs\labs\lab4\code\src"
+windres --output-format=coff -I . -i ..\res\Lab4.rc -o Lab4.res.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Lab4.cpp -o Lab4.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c my_editor.cpp -o my_editor.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c shape.cpp -o shape.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c point.cpp -o point.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
+g++ -municode -o Lab4.exe Lab4.o my_editor.o shape.o point.o line.o rect.o ellipse.o Lab4.res.o -lgdi32 -luser32 -lcomctl32
+```
+
+### Run
+```powershell
+.\Lab4.exe
 ```
 
 ## Student

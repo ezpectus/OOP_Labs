@@ -8,7 +8,7 @@
 
 ## Лабораторні
 
-Всі лаби на C++ у Visual Studio (Win32). Кожна наступна лаба продовжує попередню — в результаті виходить графічний редактор об'єктів.
+Всі лаби на C++ (Win32 API). Кожна наступна лаба продовжує попередню — в результаті виходить графічний редактор об'єктів.
 
 | # | Лаба | Тема | Статус |
 |---|------|------|--------|
@@ -25,7 +25,28 @@
 
 ## Технології
 
-C++26 (/std:c++latest), Visual Studio 2022, Win32 API
+C++26, Win32 API, MinGW (LLVM-MinGW g++)
+
+## Збірка
+
+```powershell
+# Зібрати всі лаби одразу:
+.\build.bat
+
+# Або окремо — див. README.md у кожній папці labN/
+```
+
+## Запуск
+
+```powershell
+# Lab 1-5:
+cd "F:\VSC projects\OOP_Labs\labs\labN\code\src"
+.\LabN.exe
+
+# Lab 6 (запускає Object2 і Object3 автоматично):
+cd "F:\VSC projects\OOP_Labs\labs\lab6\code\Lab6\src"
+.\Lab6.exe
+```
 
 ## Структура
 

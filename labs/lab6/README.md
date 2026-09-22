@@ -30,14 +30,38 @@ lab6/
         └── src/       ← Object3.cpp
 ```
 
-## Launch (PowerShell)
+## Build & Run (MinGW / g++)
+
+### Build all 3 programs
 ```powershell
-cd "F:\VSC projects\OOP_Labs\labs\lab6\code"
-msbuild Lab6.sln /p:Configuration=Debug /p:Platform=x64
-.\x64\Debug\Lab6.exe
+# Lab6 Manager
+cd "F:\VSC projects\OOP_Labs\labs\lab6\code\Lab6\src"
+windres --output-format=coff -I . -i ..\res\Lab6.rc -o Lab6.res.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Lab6.cpp -o Lab6.o
+g++ -municode -o Lab6.exe Lab6.o Lab6.res.o -lgdi32 -luser32 -lcomctl32
+
+# Object2
+cd "F:\VSC projects\OOP_Labs\labs\lab6\code\Object2\src"
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Object2.cpp -o Object2.o
+g++ -municode -o Object2.exe Object2.o -lgdi32 -luser32
+
+# Object3
+cd "F:\VSC projects\OOP_Labs\labs\lab6\code\Object3\src"
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Object3.cpp -o Object3.o
+g++ -municode -o Object3.exe Object3.o -lgdi32 -luser32
+
+# Copy Object2.exe and Object3.exe next to Lab6.exe
+copy "F:\VSC projects\OOP_Labs\labs\lab6\code\Object2\src\Object2.exe" "F:\VSC projects\OOP_Labs\labs\lab6\code\Lab6\src\"
+copy "F:\VSC projects\OOP_Labs\labs\lab6\code\Object3\src\Object3.exe" "F:\VSC projects\OOP_Labs\labs\lab6\code\Lab6\src\"
 ```
 
-Object2 and Object3 are launched automatically by Lab6 via WinExec.
+### Run
+```powershell
+cd "F:\VSC projects\OOP_Labs\labs\lab6\code\Lab6\src"
+.\Lab6.exe
+```
+
+Object2 and Object3 are launched automatically by Lab6 via CreateProcess.
 
 ## Student
 Stepanenko Denys, IM-051, 2026

@@ -1,4 +1,5 @@
 // Lab3.rc — main window resources
+#include <windows.h>
 #include "resource.h"
 
 IDR_MAINMENU MENU
@@ -18,12 +19,4 @@ BEGIN
     BEGIN
         MENUITEM "&About", IDM_ABOUT
     END
-END
-
-IDR_TOOLBAR TOOLBAR 16, 16
-BEGIN
-    BUTTON IDM_POINT
-    BUTTON IDM_LINE
-    BUTTON IDM_RECT
-    BUTTON IDM_ELLIPSE
 END

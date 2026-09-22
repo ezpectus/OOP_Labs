@@ -52,7 +52,7 @@ private:
     void UpdateTitle()
     {
         TCHAR buf[128];
-        _stprintf_s(buf, 128, _T("%s — [%s]"), szTitleBase, ShapeNames[currentType - IDM_POINT]);
+        swprintf(buf, 128, L"%s — [%s]", szTitleBase, ShapeNames[currentType - IDM_POINT]);
         SetWindowText(hWnd, buf);
     }
 
@@ -122,7 +122,7 @@ public:
         // Add buttons
         TBBUTTON tbb[4];
         ZeroMemory(tbb, sizeof(tbb));
-        const int stdBtns[4] = { STD_FILE_NEW, STD_CUT, STD_COPY, STD_PASTE };
+        const int stdBtns[4] = { 6, 3, 4, 5 };
         for (int i = 0; i < 4; i++)
         {
             tbb[i].iBitmap = stdBtns[i];
@@ -191,7 +191,7 @@ public:
         if (isDrawing && pTempShape)
         {
             pTempShape->OnMouseMove(x, y);
-            InvalidateRect(hWnd, NULL, TRUE);
+            InvalidateRect(hWnd, NULL, FALSE);
         }
     }
 
@@ -210,7 +210,7 @@ public:
             delete pTempShape;
             pTempShape = NULL;
             isDrawing = false;
-            InvalidateRect(hWnd, NULL, TRUE);
+            InvalidateRect(hWnd, NULL, FALSE);
         }
     }
 
@@ -218,8 +218,25 @@ public:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        DrawAllShapes(hdc);
-        if (isDrawing && pTempShape) DrawRubberBand(hdc);
+
+        RECT rc;
+        GetClientRect(hWnd, &rc);
+        HDC hdcMem = CreateCompatibleDC(hdc);
+        HBITMAP hbmMem = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
+        HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, hbmMem);
+
+        HBRUSH hBrush = CreateSolidBrush(GetSysColor(COLOR_WINDOW));
+        FillRect(hdcMem, &rc, hBrush);
+        DeleteObject(hBrush);
+
+        DrawAllShapes(hdcMem);
+        if (isDrawing && pTempShape) DrawRubberBand(hdcMem);
+
+        BitBlt(hdc, 0, 0, rc.right, rc.bottom, hdcMem, 0, 0, SRCCOPY);
+
+        SelectObject(hdcMem, hbmOld);
+        DeleteObject(hbmMem);
+        DeleteDC(hdcMem);
         EndPaint(hWnd, &ps);
     }
 
@@ -233,8 +250,7 @@ public:
         switch (message)
         {
         case WM_CREATE:
-            OnCreate((HWND)((LPCREATESTRUCT)lParam)->hwndParent,
-                     ((LPCREATESTRUCT)lParam)->hInstance);
+            OnCreate(hWnd, ((LPCREATESTRUCT)lParam)->hInstance);
             return 0;
         case WM_COMMAND:     return OnCommand(wParam, lParam);
         case WM_NOTIFY:      return OnNotify(wParam, lParam);
@@ -242,6 +258,7 @@ public:
         case WM_MOUSEMOVE:   OnMouseMove(LOWORD(lParam), HIWORD(lParam)); return 0;
         case WM_LBUTTONUP:   OnLButtonUp(LOWORD(lParam), HIWORD(lParam)); return 0;
         case WM_PAINT:       OnPaint(); return 0;
+        case WM_ERASEBKGND:  return 1;
         case WM_DESTROY:     OnDestroy(); return 0;
         case WM_SIZE:
             SendMessage(hToolBar, TB_AUTOSIZE, 0, 0);
@@ -308,7 +325,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     HWND hWnd = CreateWindow(
         szWindowClass, szTitleBase,
-        WS_OVERLAPPEDWINDOW,
+        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
         CW_USEDEFAULT, CW_USEDEFAULT,
         800, 600,
         NULL, NULL, hInstance, &app);
@@ -333,6 +350,5 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 // LAUNCH (PowerShell):
-// cd "F:\VSC projects\OOP_Labs\labs\lab3\code"
-// msbuild Lab3.sln /p:Configuration=Debug /p:Platform=x64
-// .\x64\Debug\Lab3.exe
+// cd "F:\VSC projects\OOP_Labs\labs\lab3\code\src"
+// .\Lab3.exe

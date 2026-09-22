@@ -7,7 +7,7 @@ class LineWithCircles : public LineShape, public EllipseShape
 {
 public:
     LineWithCircles(int x1=0, int y1=0, int x2=0, int y2=0)
-        : LineShape(x1, y1, x2, y2), EllipseShape(x1, y1, x2, y2) {}
+        : Shape(x1, y1, x2, y2), LineShape(x1, y1, x2, y2), EllipseShape(x1, y1, x2, y2) {}
 
     void Show(HDC hdc) override
     {

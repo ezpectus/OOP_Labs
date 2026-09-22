@@ -121,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int x = LOWORD(lParam);
             int y = HIWORD(lParam);
             pTempShape->OnMouseMove(x, y);
-            InvalidateRect(hWnd, NULL, TRUE);
+            InvalidateRect(hWnd, NULL, FALSE);
         }
     }
     break;
@@ -146,21 +146,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             delete pTempShape;
             pTempShape = NULL;
             isDrawing = false;
-            InvalidateRect(hWnd, NULL, TRUE);
+            InvalidateRect(hWnd, NULL, FALSE);
         }
     }
     break;
+
+    case WM_ERASEBKGND:
+        return 1;
 
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
 
-        DrawAllShapes(hdc);
+        RECT rc;
+        GetClientRect(hWnd, &rc);
+        HDC hdcMem = CreateCompatibleDC(hdc);
+        HBITMAP hbmMem = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
+        HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, hbmMem);
+
+        HBRUSH hBrush = CreateSolidBrush(GetSysColor(COLOR_WINDOW));
+        FillRect(hdcMem, &rc, hBrush);
+        DeleteObject(hBrush);
+
+        DrawAllShapes(hdcMem);
 
         if (isDrawing && pTempShape)
-            DrawRubberBand(hdc, pTempShape);
+            DrawRubberBand(hdcMem, pTempShape);
 
+        BitBlt(hdc, 0, 0, rc.right, rc.bottom, hdcMem, 0, 0, SRCCOPY);
+
+        SelectObject(hdcMem, hbmOld);
+        DeleteObject(hbmMem);
+        DeleteDC(hdcMem);
         EndPaint(hWnd, &ps);
     }
     break;
@@ -207,7 +225,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     HWND hWnd = CreateWindow(
         szWindowClass, szTitle,
-        WS_OVERLAPPEDWINDOW,
+        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
         CW_USEDEFAULT, CW_USEDEFAULT,
         800, 600,
         NULL, NULL, hInstance, NULL);
@@ -233,6 +251,5 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 // LAUNCH (PowerShell):
-// cd "F:\VSC projects\OOP_Labs\labs\lab2\code"
-// msbuild Lab2.sln /p:Configuration=Debug /p:Platform=x64
-// .\x64\Debug\Lab2.exe
+// cd "F:\VSC projects\OOP_Labs\labs\lab2\code\src"
+// .\Lab2.exe

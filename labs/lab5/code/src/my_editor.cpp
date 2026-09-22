@@ -54,7 +54,7 @@ void MyEditor::OnMouseMove(int x, int y, HWND hWnd)
     if (isDrawing && pTempShape)
     {
         pTempShape->OnMouseMove(x, y);
-        InvalidateRect(hWnd, NULL, TRUE);
+        InvalidateRect(hWnd, NULL, FALSE);
     }
 }
 

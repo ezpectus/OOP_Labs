@@ -159,6 +159,5 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 // LAUNCH (PowerShell):
-// cd "F:\VSC projects\OOP_Labs\labs\lab1\code"
-// msbuild Lab1.sln /p:Configuration=Debug /p:Platform=x64
-// .\x64\Debug\Lab1.exe
+// cd "F:\VSC projects\OOP_Labs\labs\lab1\code\src"
+// .\Lab1.exe

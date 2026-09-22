@@ -20,11 +20,24 @@ lab2/
     └── res/           ← Lab2.rc
 ```
 
-## Launch (PowerShell)
+## Build & Run (MinGW / g++)
+
+### Build
 ```powershell
-cd "F:\VSC projects\OOP_Labs\labs\lab2\code"
-msbuild Lab2.sln /p:Configuration=Debug /p:Platform=x64
-.\x64\Debug\Lab2.exe
+cd "F:\VSC projects\OOP_Labs\labs\lab2\code\src"
+windres --output-format=coff -I . -i ..\res\Lab2.rc -o Lab2.res.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Lab2.cpp -o Lab2.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c shape.cpp -o shape.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c point.cpp -o point.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
+g++ -municode -o Lab2.exe Lab2.o shape.o point.o line.o rect.o ellipse.o Lab2.res.o -lgdi32 -luser32 -lcomctl32
+```
+
+### Run
+```powershell
+.\Lab2.exe
 ```
 
 ## Student

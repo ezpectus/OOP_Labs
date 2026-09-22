@@ -1,8 +1,11 @@
 // my_table.cpp — independent table module implementation
 // No includes from project (only windows.h via my_table.h)
 #include "my_table.h"
+#include <stdio.h>
+#include <wchar.h>
 
 static MyTable* g_pTable = nullptr;
+static INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 MyTable::MyTable() : hDlg(NULL), hList(NULL), rowCount(0) {}
 
@@ -36,7 +39,7 @@ void MyTable::Add(const wchar_t* name, int x1, int y1, int x2, int y2)
 {
     if (!hList) return;
     wchar_t buf[256];
-    swprintf_s(buf, 256, L"%s\t%d\t%d\t%d\t%d", name, x1, y1, x2, y2);
+    swprintf(buf, 256, L"%s\t%d\t%d\t%d\t%d", name, x1, y1, x2, y2);
     SendMessageW(hList, LB_ADDSTRING, 0, (LPARAM)buf);
     rowCount++;
     // Auto-scroll to bottom
@@ -53,7 +56,7 @@ void MyTable::Clear()
 }
 
 // Dialog procedure — static, internal to this module
-static INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {

@@ -26,9 +26,9 @@ static void UpdateTitle(HWND hWnd, int type)
     TCHAR buf[128];
     int idx = type - IDM_POINT;
     if (idx >= 0 && idx < 6)
-        _stprintf_s(buf, 128, _T("%s — [%s]"), szTitleBase, ShapeNames[idx]);
+        swprintf(buf, 128, L"%s — [%s]", szTitleBase, ShapeNames[idx]);
     else
-        _stprintf_s(buf, 128, _T("%s"), szTitleBase);
+        swprintf(buf, 128, L"%s", szTitleBase);
     SetWindowText(hWnd, buf);
 }
 
@@ -56,7 +56,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         tbab.nID = IDB_STD_SMALL_COLOR;
         int idx0 = (int)SendMessage(hToolBar, TB_ADDBITMAP, 0, (LPARAM)&tbab);
 
-        const int stdBtns[6] = { STD_FILE_NEW, STD_CUT, STD_COPY, STD_PASTE, STD_REDOW, STD_UNDO };
+        const int stdBtns[6] = { 6, 3, 4, 5, 8, 7 };
         TBBUTTON tbb[6];
         ZeroMemory(tbb, sizeof(tbb));
         for (int i = 0; i < 6; i++)
@@ -127,14 +127,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_LBUTTONUP:
         g_pEditor->OnMouseUp(LOWORD(lParam), HIWORD(lParam));
-        InvalidateRect(hWnd, NULL, TRUE);
+        InvalidateRect(hWnd, NULL, FALSE);
         break;
+
+    case WM_ERASEBKGND:
+        return 1;
 
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
-        g_pEditor->OnPaint(hdc);
+
+        RECT rc;
+        GetClientRect(hWnd, &rc);
+        HDC hdcMem = CreateCompatibleDC(hdc);
+        HBITMAP hbmMem = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
+        HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, hbmMem);
+
+        HBRUSH hBrush = CreateSolidBrush(GetSysColor(COLOR_WINDOW));
+        FillRect(hdcMem, &rc, hBrush);
+        DeleteObject(hBrush);
+
+        g_pEditor->OnPaint(hdcMem);
+
+        BitBlt(hdc, 0, 0, rc.right, rc.bottom, hdcMem, 0, 0, SRCCOPY);
+
+        SelectObject(hdcMem, hbmOld);
+        DeleteObject(hbmMem);
+        DeleteDC(hdcMem);
         EndPaint(hWnd, &ps);
     }
     break;
@@ -188,7 +208,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     HWND hWnd = CreateWindow(
         szWindowClass, szTitleBase,
-        WS_OVERLAPPEDWINDOW,
+        WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
         CW_USEDEFAULT, CW_USEDEFAULT,
         800, 600,
         NULL, NULL, hInstance, NULL);
@@ -213,6 +233,5 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }
 
 // LAUNCH (PowerShell):
-// cd "F:\VSC projects\OOP_Labs\labs\lab4\code"
-// msbuild Lab4.sln /p:Configuration=Debug /p:Platform=x64
-// .\x64\Debug\Lab4.exe
+// cd "F:\VSC projects\OOP_Labs\labs\lab4\code\src"
+// .\Lab4.exe

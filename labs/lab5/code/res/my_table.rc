@@ -1,4 +1,5 @@
 // my_table.rc — table dialog resource (independent)
+#include <windows.h>
 #include "my_table.h"
 
 IDD_TABLE_DIALOG DIALOGEX 0, 0, 300, 200

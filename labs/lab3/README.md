@@ -20,11 +20,24 @@ lab3/
     └── res/           ← Lab3.rc
 ```
 
-## Launch (PowerShell)
+## Build & Run (MinGW / g++)
+
+### Build
 ```powershell
-cd "F:\VSC projects\OOP_Labs\labs\lab3\code"
-msbuild Lab3.sln /p:Configuration=Debug /p:Platform=x64
-.\x64\Debug\Lab3.exe
+cd "F:\VSC projects\OOP_Labs\labs\lab3\code\src"
+windres --output-format=coff -I . -i ..\res\Lab3.rc -o Lab3.res.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Lab3.cpp -o Lab3.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c shape.cpp -o shape.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c point.cpp -o point.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
+g++ -municode -o Lab3.exe Lab3.o shape.o point.o line.o rect.o ellipse.o Lab3.res.o -lgdi32 -luser32 -lcomctl32
+```
+
+### Run
+```powershell
+.\Lab3.exe
 ```
 
 ## Student
