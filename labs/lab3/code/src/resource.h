@@ -8,3 +8,4 @@
 #define IDM_ELLIPSE     104
 #define IDM_EXIT        105
 #define IDM_ABOUT       106
+#define IDC_TOOLBAR     120

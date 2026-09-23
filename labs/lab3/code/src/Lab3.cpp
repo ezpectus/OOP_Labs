@@ -7,6 +7,7 @@
 // Message handlers are members of MyEditor class
 
 #include <windows.h>
+#include <commctrl.h>
 #include <tchar.h>
 #include "resource.h"
 #include "editor.h"
@@ -20,8 +21,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_CREATE:
+        g_editor.OnCreate(hWnd);
+        break;
+
     case WM_COMMAND:
         g_editor.OnCommand(hWnd, wParam);
+        break;
+
+    case WM_NOTIFY:
+        g_editor.OnNotify(hWnd, wParam, lParam);
         break;
 
     case WM_INITMENUPOPUP:
@@ -63,6 +72,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+    InitCommonControls();
 
     WNDCLASSEX wcex;
     wcex.cbSize        = sizeof(WNDCLASSEX);

@@ -10,7 +10,9 @@ class MyEditor
 public:
     MyEditor();
 
+    void OnCreate(HWND hWnd);
     void OnCommand(HWND hWnd, WPARAM wParam);
+    void OnNotify(HWND hWnd, WPARAM wParam, LPARAM lParam);
     void OnInitMenuPopup(WPARAM wParam);
     void OnLButtonDown(HWND hWnd, int x, int y);
     void OnMouseMove(HWND hWnd, int x, int y);
@@ -24,6 +26,7 @@ private:
     int currentType;
     bool isDrawing;
     Shape* pTempShape;
+    HWND hToolbar;
 
     Shape* CreateShape(int type, int x1, int y1, int x2, int y2);
     void DrawAllShapes(HDC hdc);

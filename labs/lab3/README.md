@@ -21,7 +21,7 @@ lab3/
 └── code/
     ├── Lab3.sln
     ├── Lab3.vcxproj
-    ├── src/           ← Lab3.cpp, editor.*, shape.*, point.*, line.*, rect.*, ellipse.*, resource.h
+    ├── src/           ← Lab3.cpp, editor.*, toolbar.*, shape.*, point.*, line.*, rect.*, ellipse.*, resource.h
     └── res/           ← Lab3.rc
 ```
 
@@ -33,12 +33,13 @@ cd "F:\VSC projects\OOP_Labs\labs\lab3\code\src"
 windres -c 65001 --output-format=coff -I . -i ..\res\Lab3.rc -o Lab3.res.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c Lab3.cpp -o Lab3.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c editor.cpp -o editor.o
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c toolbar.cpp -o toolbar.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c shape.cpp -o shape.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c point.cpp -o point.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
-g++ -municode -o Lab3.exe Lab3.o editor.o shape.o point.o line.o rect.o ellipse.o Lab3.res.o -lgdi32 -luser32 -lcomctl32
+g++ -municode -o Lab3.exe Lab3.o editor.o toolbar.o shape.o point.o line.o rect.o ellipse.o Lab3.res.o -lgdi32 -luser32 -lcomctl32
 ```
 
 ### Run

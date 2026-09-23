@@ -3,6 +3,7 @@
 //   rect: 2 corners + no fill, ellipse: center->corner + light-green fill
 #include "editor.h"
 #include "resource.h"
+#include "toolbar.h"
 #include "point.h"
 #include "line.h"
 #include "rect.h"
@@ -16,6 +17,23 @@ MyEditor::MyEditor()
     currentType = IDM_POINT;
     isDrawing = false;
     pTempShape = NULL;
+    hToolbar = NULL;
+}
+
+void MyEditor::OnCreate(HWND hWnd)
+{
+    hToolbar = CreateEditorToolbar(hWnd,
+        (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE));
+}
+
+void MyEditor::OnNotify(HWND hWnd, WPARAM wParam, LPARAM lParam)
+{
+    LPNMHDR nmh = (LPNMHDR)lParam;
+    if (nmh->code == TTN_NEEDTEXT)
+    {
+        LPTOOLTIPTEXT ttt = (LPTOOLTIPTEXT)lParam;
+        ttt->lpszText = (LPTSTR)ToolTipText((int)nmh->idFrom);
+    }
 }
 
 Shape* MyEditor::CreateShape(int type, int x1, int y1, int x2, int y2)
