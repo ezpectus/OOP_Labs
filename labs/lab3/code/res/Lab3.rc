@@ -1,0 +1,22 @@
+// Lab3.rc - main window resources
+#include <windows.h>
+#include "resource.h"
+
+IDR_MAINMENU MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        MENUITEM "В&ихід", IDM_EXIT
+    END
+    POPUP "&Об'єкти"
+    BEGIN
+        MENUITEM "&Точка",        IDM_POINT
+        MENUITEM "&Лінія",        IDM_LINE
+        MENUITEM "П&рямокутник",  IDM_RECT
+        MENUITEM "&Еліпс",        IDM_ELLIPSE
+    END
+    POPUP "&Довідка"
+    BEGIN
+        MENUITEM "&Про програму", IDM_ABOUT
+    END
+END

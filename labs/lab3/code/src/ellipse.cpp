@@ -1,0 +1,25 @@
+// ellipse.cpp - Ellipse shape implementation
+// Variant: black outline + light-green fill (14 mod 5 = 4 -> color fill, 14 mod 6 = 2 -> light-green)
+// Input: from center to corner (14 mod 2 = 0)
+#include "ellipse.h"
+#include <stdlib.h>
+
+void EllipseShape::Show(HDC hdc)
+{
+    HBRUSH hBrush = CreateSolidBrush(RGB(144, 238, 144));
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+    HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+
+    // input: center -> corner
+    int rx = abs(x2 - x1);
+    int ry = abs(y2 - y1);
+
+    Ellipse(hdc, x1 - rx, y1 - ry, x1 + rx, y1 + ry);
+
+    SelectObject(hdc, hOldPen);
+    SelectObject(hdc, hOldBrush);
+    DeleteObject(hPen);
+    DeleteObject(hBrush);
+}
