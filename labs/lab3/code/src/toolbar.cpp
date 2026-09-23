@@ -61,6 +61,10 @@ HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
         HDC hdcMem = CreateCompatibleDC(hdcScreen);
         HBITMAP hbm = CreateCompatibleBitmap(hdcScreen, 16, 16);
         SelectObject(hdcMem, hbm);
+
+        // button-face background (bitmap starts uninitialized)
+        RECT rc = { 0, 0, 16, 16 };
+        FillRect(hdcMem, &rc, (HBRUSH)(COLOR_BTNFACE + 1));
         DrawToolGlyph(hdcMem, ids[i]);
         DeleteDC(hdcMem);
 
@@ -72,7 +76,7 @@ HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
         tb[i].iBitmap   = idx;
         tb[i].idCommand = ids[i];
         tb[i].fsState   = TBSTATE_ENABLED;
-        tb[i].fsStyle   = TBSTYLE_BUTTON;
+        tb[i].fsStyle   = TBSTYLE_CHECKGROUP;
         tb[i].dwData    = 0;
         tb[i].iString   = 0;
     }

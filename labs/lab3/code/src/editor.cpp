@@ -2,6 +2,7 @@
 // Variant: J=14, static array N=114, solid blue rubber band,
 //   rect: 2 corners + no fill, ellipse: center->corner + light-green fill
 #include "editor.h"
+#include <commctrl.h>
 #include "resource.h"
 #include "toolbar.h"
 #include "point.h"
@@ -81,6 +82,8 @@ void MyEditor::OnCommand(HWND hWnd, WPARAM wParam)
     case IDM_RECT:
     case IDM_ELLIPSE:
         currentType = wmId;
+        // sync toolbar pressed state (CHECKGROUP unchecks the rest)
+        SendMessage(hToolbar, TB_CHECKBUTTON, wmId, MAKELONG(TRUE, 0));
         break;
     case IDM_EXIT:
         DestroyWindow(hWnd);
