@@ -9,6 +9,7 @@
 #include "line.h"
 #include "rect.h"
 #include "ellipse.h"
+#include "triangle.h"
 #include <tchar.h>
 
 MyEditor::MyEditor()
@@ -45,6 +46,7 @@ Shape* MyEditor::CreateShape(int type, int x1, int y1, int x2, int y2)
     case IDM_LINE:    return new LineShape(x1, y1, x2, y2);
     case IDM_RECT:    return new RectShape(x1, y1, x2, y2);
     case IDM_ELLIPSE: return new EllipseShape(x1, y1, x2, y2);
+    case IDM_TRIANGLE:return new TriangleShape(x1, y1, x2, y2);
     default:          return nullptr;
     }
 }
@@ -81,6 +83,7 @@ void MyEditor::OnCommand(HWND hWnd, WPARAM wParam)
     case IDM_LINE:
     case IDM_RECT:
     case IDM_ELLIPSE:
+    case IDM_TRIANGLE:
         currentType = wmId;
         // sync toolbar pressed state (CHECKGROUP unchecks the rest)
         SendMessage(hToolbar, TB_CHECKBUTTON, wmId, MAKELONG(TRUE, 0));
@@ -101,7 +104,7 @@ void MyEditor::OnInitMenuPopup(WPARAM wParam)
     // Type marker in Objects menu (14 mod 2 = 0)
     if (LOWORD(wParam) == 1)
     {
-        CheckMenuRadioItem((HMENU)wParam, IDM_POINT, IDM_ELLIPSE,
+        CheckMenuRadioItem((HMENU)wParam, IDM_POINT, IDM_TRIANGLE,
                            currentType, MF_BYCOMMAND);
     }
 }

@@ -1,9 +1,8 @@
-// rect.cpp - Rectangle shape implementation
-// Variant: black outline, no fill by default (14 mod 5 = 4)
-// Input: by two corners (14 mod 2 = 0)
-#include "rect.h"
+// triangle.cpp - Triangle shape implementation
+// Input: by two corners of bounding rect; fill: orange by default
+#include "triangle.h"
 
-void RectShape::Show(HDC hdc)
+void TriangleShape::Show(HDC hdc)
 {
     HBRUSH hBrush = m_hasFill ? CreateSolidBrush(m_fillColor)
                             : (HBRUSH)GetStockObject(NULL_BRUSH);
@@ -12,13 +11,18 @@ void RectShape::Show(HDC hdc)
     HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
-    // input: two corners
     int left   = (x1 < x2) ? x1 : x2;
     int right  = (x1 < x2) ? x2 : x1;
     int top    = (y1 < y2) ? y1 : y2;
     int bottom = (y1 < y2) ? y2 : y1;
 
-    Rectangle(hdc, left, top, right, bottom);
+    // apex at top-center, base corners at bottom
+    POINT pts[3] = {
+        { (left + right) / 2, top },
+        { left, bottom },
+        { right, bottom }
+    };
+    Polygon(hdc, pts, 3);
 
     SelectObject(hdc, hOldPen);
     SelectObject(hdc, hOldBrush);

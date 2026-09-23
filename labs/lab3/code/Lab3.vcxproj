@@ -84,6 +84,7 @@
     <ClCompile Include="src\line.cpp" />
     <ClCompile Include="src\rect.cpp" />
     <ClCompile Include="src\ellipse.cpp" />
+    <ClCompile Include="src\triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\resource.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="src\line.h" />
     <ClInclude Include="src\rect.h" />
     <ClInclude Include="src\ellipse.h" />
+    <ClInclude Include="src\triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\Lab3.rc" />

@@ -4,17 +4,18 @@
 #include <commctrl.h>
 #include <tchar.h>
 
-#define BTN_COUNT 4
+#define BTN_COUNT 5
 
 LPCTSTR ToolTipText(int cmdId)
 {
     switch (cmdId)
     {
-    case IDM_POINT:   return _T("Точка");
-    case IDM_LINE:    return _T("Лінія");
-    case IDM_RECT:    return _T("Прямокутник");
-    case IDM_ELLIPSE: return _T("Еліпс");
-    default:          return _T("");
+    case IDM_POINT:    return _T("Точка");
+    case IDM_LINE:     return _T("Лінія");
+    case IDM_RECT:     return _T("Прямокутник");
+    case IDM_ELLIPSE:  return _T("Еліпс");
+    case IDM_TRIANGLE: return _T("Трикутник");
+    default:           return _T("");
     }
 }
 
@@ -39,6 +40,16 @@ static void DrawToolGlyph(HDC hdc, int id)
     case IDM_ELLIPSE:
         Ellipse(hdc, 3, 4, 14, 12);
         break;
+    case IDM_TRIANGLE:
+    {
+        HBRUSH hb = CreateSolidBrush(RGB(255, 165, 0));
+        HBRUSH hob = (HBRUSH)SelectObject(hdc, hb);
+        POINT p[3] = { {8, 3}, {3, 13}, {13, 13} };
+        Polygon(hdc, p, 3);
+        SelectObject(hdc, hob);
+        DeleteObject(hb);
+        break;
+    }
     }
 
     SelectObject(hdc, hOld);
@@ -52,7 +63,7 @@ HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
         IDC_TOOLBAR, BTN_COUNT, NULL, 0, NULL, 0,
         0, 0, 16, 16, sizeof(TBBUTTON));
 
-    const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE };
+    const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE, IDM_TRIANGLE };
     TBBUTTON tb[BTN_COUNT];
 
     HDC hdcScreen = GetDC(NULL);

@@ -14,6 +14,7 @@ BEGIN
         MENUITEM "&Лінія",        IDM_LINE
         MENUITEM "П&рямокутник",  IDM_RECT
         MENUITEM "&Еліпс",        IDM_ELLIPSE
+        MENUITEM "Трик&утник",    IDM_TRIANGLE
     END
     POPUP "&Довідка"
     BEGIN

@@ -6,7 +6,8 @@
 
 void EllipseShape::Show(HDC hdc)
 {
-    HBRUSH hBrush = CreateSolidBrush(RGB(144, 238, 144));
+    HBRUSH hBrush = m_hasFill ? CreateSolidBrush(m_fillColor)
+                            : (HBRUSH)GetStockObject(NULL_BRUSH);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
 
     HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
@@ -20,6 +21,6 @@ void EllipseShape::Show(HDC hdc)
 
     SelectObject(hdc, hOldPen);
     SelectObject(hdc, hOldBrush);
+    if (m_hasFill) DeleteObject(hBrush);
     DeleteObject(hPen);
-    DeleteObject(hBrush);
 }

@@ -3,7 +3,8 @@
 
 void LineShape::Show(HDC hdc)
 {
-    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+    // line color = fill color if set, black otherwise
+    HPEN hPen = CreatePen(PS_SOLID, 1, m_hasFill ? m_fillColor : RGB(0, 0, 0));
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
     MoveToEx(hdc, x1, y1, NULL);

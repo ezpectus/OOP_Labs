@@ -21,7 +21,7 @@ lab3/
 └── code/
     ├── Lab3.sln
     ├── Lab3.vcxproj
-    ├── src/           ← Lab3.cpp, editor.*, toolbar.*, shape.*, point.*, line.*, rect.*, ellipse.*, resource.h
+    ├── src/           ← Lab3.cpp, editor.*, toolbar.*, shape.*, point.*, line.*, rect.*, ellipse.*, triangle.*, resource.h
     └── res/           ← Lab3.rc
 ```
 
@@ -39,7 +39,8 @@ g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c point.cpp -o point.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
-g++ -municode -o Lab3.exe Lab3.o editor.o toolbar.o shape.o point.o line.o rect.o ellipse.o Lab3.res.o -lgdi32 -luser32 -lcomctl32
+g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c triangle.cpp -o triangle.o
+g++ -municode -o Lab3.exe Lab3.o editor.o toolbar.o shape.o point.o line.o rect.o ellipse.o triangle.o Lab3.res.o -lgdi32 -luser32 -lcomctl32
 ```
 
 ### Run
