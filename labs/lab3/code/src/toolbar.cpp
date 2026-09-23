@@ -4,7 +4,7 @@
 #include <commctrl.h>
 #include <tchar.h>
 
-#define BTN_COUNT 6
+#define BTN_COUNT 7
 
 LPCTSTR ToolTipText(int cmdId)
 {
@@ -16,6 +16,7 @@ LPCTSTR ToolTipText(int cmdId)
     case IDM_ELLIPSE:  return _T("Еліпс");
     case IDM_TRIANGLE: return _T("Трикутник");
     case IDM_SELECT:   return _T("Вибір");
+    case IDM_ERASER:   return _T("Губка");
     default:           return _T("");
     }
 }
@@ -62,6 +63,17 @@ static void DrawToolGlyph(HDC hdc, int id)
         DeleteObject(hb);
         break;
     }
+    case IDM_ERASER:
+    {
+        // pink eraser parallelogram
+        HBRUSH hb = CreateSolidBrush(RGB(255, 150, 200));
+        HBRUSH hob = (HBRUSH)SelectObject(hdc, hb);
+        POINT e[4] = { {4, 10}, {9, 3}, {13, 7}, {8, 14} };
+        Polygon(hdc, e, 4);
+        SelectObject(hdc, hob);
+        DeleteObject(hb);
+        break;
+    }
     }
 
     SelectObject(hdc, hOld);
@@ -75,7 +87,7 @@ HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
         IDC_TOOLBAR, BTN_COUNT, NULL, 0, NULL, 0,
         0, 0, 16, 16, sizeof(TBBUTTON));
 
-    const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE, IDM_TRIANGLE, IDM_SELECT };
+    const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE, IDM_TRIANGLE, IDM_SELECT, IDM_ERASER };
     TBBUTTON tb[BTN_COUNT];
 
     HDC hdcScreen = GetDC(NULL);

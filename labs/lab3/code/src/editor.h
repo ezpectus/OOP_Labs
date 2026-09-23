@@ -35,4 +35,5 @@ private:
     void DrawSelection(HDC hdc);
     int  HitTestIndex(int x, int y);
     void PickFillColor(HWND hWnd);
+    void EraseAt(HWND hWnd, int x, int y);
 };

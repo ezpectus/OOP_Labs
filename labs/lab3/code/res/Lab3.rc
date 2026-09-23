@@ -17,6 +17,7 @@ BEGIN
         MENUITEM "Трик&утник",    IDM_TRIANGLE
         MENUITEM SEPARATOR
         MENUITEM "&Вибір",        IDM_SELECT
+        MENUITEM "&Губка",        IDM_ERASER
         MENUITEM SEPARATOR
         MENUITEM "&Колір заливки...", IDM_FILLCOLOR
     END

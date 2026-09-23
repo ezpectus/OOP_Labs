@@ -87,6 +87,7 @@ void MyEditor::OnCommand(HWND hWnd, WPARAM wParam)
     case IDM_ELLIPSE:
     case IDM_TRIANGLE:
     case IDM_SELECT:
+    case IDM_ERASER:
         currentType = wmId;
         // sync toolbar pressed state (CHECKGROUP unchecks the rest)
         SendMessage(hToolbar, TB_CHECKBUTTON, wmId, MAKELONG(TRUE, 0));
@@ -110,7 +111,7 @@ void MyEditor::OnInitMenuPopup(WPARAM wParam)
     // Type marker in Objects menu (14 mod 2 = 0)
     if (LOWORD(wParam) == 1)
     {
-        CheckMenuRadioItem((HMENU)wParam, IDM_POINT, IDM_SELECT,
+        CheckMenuRadioItem((HMENU)wParam, IDM_POINT, IDM_ERASER,
                            currentType, MF_BYCOMMAND);
     }
 }
@@ -125,6 +126,13 @@ void MyEditor::OnLButtonDown(HWND hWnd, int x, int y)
         return;
     }
 
+    if (currentType == IDM_ERASER)
+    {
+        EraseAt(hWnd, x, y);
+        SetCapture(hWnd);
+        return;
+    }
+
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
     SetCapture(hWnd);   // keep mouse msgs even if cursor leaves window
@@ -136,6 +144,10 @@ void MyEditor::OnMouseMove(HWND hWnd, int x, int y)
     {
         pTempShape->OnMouseMove(x, y);
         InvalidateRect(hWnd, NULL, FALSE);
+    }
+    else if (currentType == IDM_ERASER && GetKeyState(VK_LBUTTON) < 0)
+    {
+        EraseAt(hWnd, x, y);
     }
 }
 
@@ -157,9 +169,9 @@ void MyEditor::OnLButtonUp(HWND hWnd, int x, int y)
         delete pTempShape;
         pTempShape = NULL;
         isDrawing = false;
-        ReleaseCapture();
         InvalidateRect(hWnd, NULL, FALSE);
     }
+    ReleaseCapture();   // eraser also captures the mouse
 }
 
 int MyEditor::HitTestIndex(int x, int y)
@@ -189,6 +201,24 @@ void MyEditor::DrawSelection(HDC hdc)
     SelectObject(hdc, hOldBrush);
     SelectObject(hdc, hOldPen);
     DeleteObject(hPen);
+}
+
+void MyEditor::EraseAt(HWND hWnd, int x, int y)
+{
+    bool erased = false;
+    for (int i = shapeCount - 1; i >= 0; i--)
+    {
+        if (pcshape[i] && pcshape[i]->HitTest(x, y))
+        {
+            if (pcshape[i] == pSelected) pSelected = NULL;
+            delete pcshape[i];
+            for (int j = i; j < shapeCount - 1; j++)
+                pcshape[j] = pcshape[j + 1];
+            pcshape[--shapeCount] = NULL;
+            erased = true;
+        }
+    }
+    if (erased) InvalidateRect(hWnd, NULL, FALSE);
 }
 
 void MyEditor::PickFillColor(HWND hWnd)
