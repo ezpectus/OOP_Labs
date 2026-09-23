@@ -29,3 +29,21 @@ void TriangleShape::Show(HDC hdc)
     if (m_hasFill) DeleteObject(hBrush);
     DeleteObject(hPen);
 }
+
+bool TriangleShape::HitTest(int x, int y) const
+{
+    int left   = (x1 < x2) ? x1 : x2;
+    int right  = (x1 < x2) ? x2 : x1;
+    int top    = (y1 < y2) ? y1 : y2;
+    int bottom = (y1 < y2) ? y2 : y1;
+
+    POINT pts[3] = {
+        { (left + right) / 2, top },
+        { left, bottom },
+        { right, bottom }
+    };
+    HRGN hRgn = CreatePolygonRgn(pts, 3, ALTERNATE);
+    bool hit = PtInRegion(hRgn, x, y) != FALSE;
+    DeleteObject(hRgn);
+    return hit;
+}

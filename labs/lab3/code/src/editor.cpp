@@ -3,6 +3,7 @@
 //   rect: 2 corners + no fill, ellipse: center->corner + light-green fill
 #include "editor.h"
 #include <commctrl.h>
+#include <commdlg.h>
 #include "resource.h"
 #include "toolbar.h"
 #include "point.h"
@@ -19,6 +20,7 @@ MyEditor::MyEditor()
     currentType = IDM_POINT;
     isDrawing = false;
     pTempShape = NULL;
+    pSelected = NULL;
     hToolbar = NULL;
 }
 
@@ -84,9 +86,13 @@ void MyEditor::OnCommand(HWND hWnd, WPARAM wParam)
     case IDM_RECT:
     case IDM_ELLIPSE:
     case IDM_TRIANGLE:
+    case IDM_SELECT:
         currentType = wmId;
         // sync toolbar pressed state (CHECKGROUP unchecks the rest)
         SendMessage(hToolbar, TB_CHECKBUTTON, wmId, MAKELONG(TRUE, 0));
+        break;
+    case IDM_FILLCOLOR:
+        PickFillColor(hWnd);
         break;
     case IDM_EXIT:
         DestroyWindow(hWnd);
@@ -104,13 +110,21 @@ void MyEditor::OnInitMenuPopup(WPARAM wParam)
     // Type marker in Objects menu (14 mod 2 = 0)
     if (LOWORD(wParam) == 1)
     {
-        CheckMenuRadioItem((HMENU)wParam, IDM_POINT, IDM_TRIANGLE,
+        CheckMenuRadioItem((HMENU)wParam, IDM_POINT, IDM_SELECT,
                            currentType, MF_BYCOMMAND);
     }
 }
 
 void MyEditor::OnLButtonDown(HWND hWnd, int x, int y)
 {
+    if (currentType == IDM_SELECT)
+    {
+        int idx = HitTestIndex(x, y);
+        pSelected = (idx >= 0) ? pcshape[idx] : NULL;
+        InvalidateRect(hWnd, NULL, FALSE);
+        return;
+    }
+
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
     SetCapture(hWnd);   // keep mouse msgs even if cursor leaves window
@@ -148,6 +162,61 @@ void MyEditor::OnLButtonUp(HWND hWnd, int x, int y)
     }
 }
 
+int MyEditor::HitTestIndex(int x, int y)
+{
+    // topmost (last drawn) shape first
+    for (int i = shapeCount - 1; i >= 0; i--)
+    {
+        if (pcshape[i] && pcshape[i]->HitTest(x, y))
+            return i;
+    }
+    return -1;
+}
+
+void MyEditor::DrawSelection(HDC hdc)
+{
+    if (!pSelected) return;
+
+    RECT r = pSelected->GetBounds();
+    InflateRect(&r, 4, 4);
+
+    HPEN hPen = CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+    HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+    HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH));
+
+    Rectangle(hdc, r.left, r.top, r.right, r.bottom);
+
+    SelectObject(hdc, hOldBrush);
+    SelectObject(hdc, hOldPen);
+    DeleteObject(hPen);
+}
+
+void MyEditor::PickFillColor(HWND hWnd)
+{
+    if (!pSelected)
+    {
+        MessageBox(hWnd,
+            _T("Спочатку виберіть об'єкт інструментом Вибір"),
+            _T("Колір заливки"), MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+
+    static COLORREF custColors[16];
+    CHOOSECOLOR cc;
+    ZeroMemory(&cc, sizeof(cc));
+    cc.lStructSize  = sizeof(cc);
+    cc.hwndOwner    = hWnd;
+    cc.lpCustColors = custColors;
+    cc.rgbResult    = pSelected->GetFillColor();
+    cc.Flags        = CC_FULLOPEN | CC_RGBINIT;
+
+    if (ChooseColor(&cc))
+    {
+        pSelected->SetFillColor(cc.rgbResult);
+        InvalidateRect(hWnd, NULL, FALSE);
+    }
+}
+
 void MyEditor::OnPaint(HWND hWnd)
 {
     PAINTSTRUCT ps;
@@ -167,6 +236,8 @@ void MyEditor::OnPaint(HWND hWnd)
 
     if (isDrawing && pTempShape)
         DrawRubberBand(hdcMem, pTempShape);
+
+    DrawSelection(hdcMem);
 
     BitBlt(hdc, 0, 0, rc.right, rc.bottom, hdcMem, 0, 0, SRCCOPY);
 

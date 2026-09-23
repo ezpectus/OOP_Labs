@@ -26,9 +26,13 @@ private:
     int currentType;
     bool isDrawing;
     Shape* pTempShape;
+    Shape* pSelected;
     HWND hToolbar;
 
     Shape* CreateShape(int type, int x1, int y1, int x2, int y2);
     void DrawAllShapes(HDC hdc);
     void DrawRubberBand(HDC hdc, Shape* shape);
+    void DrawSelection(HDC hdc);
+    int  HitTestIndex(int x, int y);
+    void PickFillColor(HWND hWnd);
 };

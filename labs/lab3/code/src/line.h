@@ -9,4 +9,5 @@ public:
         : Shape(x1, y1, x2, y2) {}
 
     void Show(HDC hdc) override;
+    bool HitTest(int x, int y) const override;
 };

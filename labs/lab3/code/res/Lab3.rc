@@ -15,6 +15,10 @@ BEGIN
         MENUITEM "П&рямокутник",  IDM_RECT
         MENUITEM "&Еліпс",        IDM_ELLIPSE
         MENUITEM "Трик&утник",    IDM_TRIANGLE
+        MENUITEM SEPARATOR
+        MENUITEM "&Вибір",        IDM_SELECT
+        MENUITEM SEPARATOR
+        MENUITEM "&Колір заливки...", IDM_FILLCOLOR
     END
     POPUP "&Довідка"
     BEGIN

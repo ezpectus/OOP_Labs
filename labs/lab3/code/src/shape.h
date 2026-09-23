@@ -20,6 +20,9 @@ public:
     virtual void OnMouseDown(int x, int y) { x1 = x; y1 = y; x2 = x; y2 = y; }
     virtual void OnMouseMove(int x, int y) { x2 = x; y2 = y; }
 
+    virtual bool HitTest(int x, int y) const;   // default: point in bounding box
+    virtual RECT GetBounds() const;             // bounding rect (selection frame)
+
     void GetCoords(int& a, int& b, int& c, int& d) const { a = x1; b = y1; c = x2; d = y2; }
     void SetFillColor(COLORREF c) { m_fillColor = c; m_hasFill = true; }
     COLORREF GetFillColor() const { return m_fillColor; }

@@ -16,3 +16,15 @@ void PointShape::Show(HDC hdc)
     DeleteObject(hPen);
     DeleteObject(hBrush);
 }
+
+bool PointShape::HitTest(int x, int y) const
+{
+    int dx = x - x1, dy = y - y1;
+    return dx * dx + dy * dy <= 64;   // radius 8
+}
+
+RECT PointShape::GetBounds() const
+{
+    RECT r = { x1 - 4, y1 - 4, x1 + 4, y1 + 4 };
+    return r;
+}

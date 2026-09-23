@@ -11,4 +11,7 @@ public:
     void Show(HDC hdc) override;
     void OnMouseDown(int x, int y) override { x1 = x; y1 = y; x2 = x; y2 = y; }
     void OnMouseMove(int x, int y) override { /* point doesn't change */ }
+
+    bool HitTest(int x, int y) const override;
+    RECT GetBounds() const override;
 };

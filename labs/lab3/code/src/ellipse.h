@@ -13,4 +13,6 @@ public:
     }
 
     void Show(HDC hdc) override;
+    bool HitTest(int x, int y) const override;
+    RECT GetBounds() const override;
 };
