@@ -9,7 +9,7 @@ void RectShape::Show(HDC hdc)
                             : (HBRUSH)GetStockObject(NULL_BRUSH);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
 
-    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+    HPEN hPen = CreatePen(PS_SOLID, 1, m_penColor);
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
     // input: two corners

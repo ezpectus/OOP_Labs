@@ -135,6 +135,9 @@ void MyEditor::OnLButtonDown(HWND hWnd, int x, int y)
 
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
+    // preview draws as solid blue outline (14 mod 4 = 2)
+    pTempShape->SetPenColor(RGB(0, 0, 255));
+    pTempShape->ClearFill();
     SetCapture(hWnd);   // keep mouse msgs even if cursor leaves window
 }
 
