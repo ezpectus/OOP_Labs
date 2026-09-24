@@ -82,10 +82,13 @@ static void DrawToolGlyph(HDC hdc, int id)
 
 HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
 {
+    // nBitmaps=0: we add images ourselves via TB_ADDBITMAP
     HWND hTB = CreateToolbarEx(hParent,
         WS_CHILD | WS_VISIBLE | TBSTYLE_TOOLTIPS | CCS_TOP,
-        IDC_TOOLBAR, BTN_COUNT, NULL, 0, NULL, 0,
-        0, 0, 16, 16, sizeof(TBBUTTON));
+        IDC_TOOLBAR, 0, NULL, 0, NULL, 0,
+        24, 22, 16, 16, sizeof(TBBUTTON));
+    SendMessage(hTB, TB_SETBITMAPSIZE, 0, MAKELPARAM(16, 16));
+    SendMessage(hTB, TB_SETBUTTONSIZE, 0, MAKELPARAM(24, 22));
 
     const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE, IDM_TRIANGLE, IDM_SELECT, IDM_ERASER };
     TBBUTTON tb[BTN_COUNT];
@@ -95,12 +98,13 @@ HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
     {
         HDC hdcMem = CreateCompatibleDC(hdcScreen);
         HBITMAP hbm = CreateCompatibleBitmap(hdcScreen, 16, 16);
-        SelectObject(hdcMem, hbm);
+        HBITMAP hOldBmp = (HBITMAP)SelectObject(hdcMem, hbm);
 
         // button-face background (bitmap starts uninitialized)
         RECT rc = { 0, 0, 16, 16 };
         FillRect(hdcMem, &rc, (HBRUSH)(COLOR_BTNFACE + 1));
         DrawToolGlyph(hdcMem, ids[i]);
+        SelectObject(hdcMem, hOldBmp);
         DeleteDC(hdcMem);
 
         TBADDBITMAP ab;
