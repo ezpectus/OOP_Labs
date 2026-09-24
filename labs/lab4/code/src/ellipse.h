@@ -2,7 +2,8 @@
 #pragma once
 #include "shape.h"
 
-class EllipseShape : public Shape
+// virtual: shared Shape subobject for multiple-inheritance shapes
+class EllipseShape : virtual public Shape
 {
 public:
     EllipseShape(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0)

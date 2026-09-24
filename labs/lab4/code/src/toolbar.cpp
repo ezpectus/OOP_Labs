@@ -4,7 +4,7 @@
 #include <commctrl.h>
 #include <tchar.h>
 
-#define BTN_COUNT 4
+#define BTN_COUNT 5
 
 LPCTSTR ToolTipText(int cmdId)
 {
@@ -14,6 +14,7 @@ LPCTSTR ToolTipText(int cmdId)
     case IDM_LINE:     return _T("Лінія");
     case IDM_RECT:     return _T("Прямокутник");
     case IDM_ELLIPSE:  return _T("Еліпс");
+    case IDM_LINEOO:   return _T("Лінія з кружечками");
     default:           return _T("");
     }
 }
@@ -39,6 +40,13 @@ static void DrawToolGlyph(HDC hdc, int id)
     case IDM_ELLIPSE:
         Ellipse(hdc, 3, 4, 14, 12);
         break;
+    case IDM_LINEOO:
+        // segment + a circle at each end
+        MoveToEx(hdc, 6, 10, NULL);
+        LineTo(hdc, 10, 6);
+        Ellipse(hdc, 1, 9, 7, 15);
+        Ellipse(hdc, 9, 1, 15, 7);
+        break;
     }
 
     SelectObject(hdc, hOld);
@@ -55,7 +63,7 @@ HWND CreateEditorToolbar(HWND hParent, HINSTANCE hInst)
     SendMessage(hTB, TB_SETBITMAPSIZE, 0, MAKELPARAM(16, 16));
     SendMessage(hTB, TB_SETBUTTONSIZE, 0, MAKELPARAM(24, 22));
 
-    const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE };
+    const int ids[BTN_COUNT] = { IDM_POINT, IDM_LINE, IDM_RECT, IDM_ELLIPSE, IDM_LINEOO };
     TBBUTTON tb[BTN_COUNT];
 
     HDC hdcScreen = GetDC(NULL);
