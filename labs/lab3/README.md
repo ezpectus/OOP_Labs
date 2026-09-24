@@ -40,7 +40,7 @@ g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c line.cpp -o line.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c rect.cpp -o rect.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c ellipse.cpp -o ellipse.o
 g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c triangle.cpp -o triangle.o
-g++ -municode -o Lab3.exe Lab3.o editor.o toolbar.o shape.o point.o line.o rect.o ellipse.o triangle.o Lab3.res.o -lgdi32 -luser32 -lcomctl32
+g++ -municode -mwindows -o Lab3.exe Lab3.o editor.o toolbar.o shape.o point.o line.o rect.o ellipse.o triangle.o Lab3.res.o -lgdi32 -luser32 -lcomctl32 -lcomdlg32
 ```
 
 ### Run
