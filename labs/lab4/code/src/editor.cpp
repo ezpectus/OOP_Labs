@@ -60,8 +60,9 @@ void MyEditor::DrawAllShapes(HDC hdc)
 
 void MyEditor::DrawRubberBand(HDC hdc, Shape* shape)
 {
+    // Lab 4: rubber band is a dotted line for every figure
     int oldROP = SetROP2(hdc, R2_NOTXORPEN);
-    HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+    HPEN hPen = CreatePen(PS_DOT, 1, RGB(0, 0, 255));
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
     shape->Show(hdc);
@@ -109,8 +110,9 @@ void MyEditor::OnLButtonDown(HWND hWnd, int x, int y)
 {
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
-    // preview outline color as in Lab 3 (blue)
+    // preview: dotted blue outline (Lab 4 requirement)
     pTempShape->SetPenColor(RGB(0, 0, 255));
+    pTempShape->SetPenStyle(PS_DOT);
     pTempShape->ClearFill();
     SetCapture(hWnd);   // keep mouse msgs even if cursor leaves window
 }

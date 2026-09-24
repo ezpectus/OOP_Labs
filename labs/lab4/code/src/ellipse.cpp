@@ -9,7 +9,7 @@ void EllipseShape::Show(HDC hdc)
                             : (HBRUSH)GetStockObject(NULL_BRUSH);
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
 
-    HPEN hPen = CreatePen(PS_SOLID, 1, m_penColor);
+    HPEN hPen = CreatePen(m_penStyle, 1, m_penColor);
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
 
     // input: center -> corner
