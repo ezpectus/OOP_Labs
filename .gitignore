@@ -44,6 +44,7 @@ linux-labs/
 # Internal workflow
 WORKFLOW.md
 COMPILE.md
+COMPILE.txt
 
 # Theory / defense notes (not for repo)
 Theory/
