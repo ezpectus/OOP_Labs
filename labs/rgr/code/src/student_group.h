@@ -1,7 +1,7 @@
 #pragma once
 // ============================================================
 // StudentGroup.h — контейнер групи студентів (РГР, варіант 13)
-// vector<Student> + операції: add/edit/remove.
+// vector<Student> + операції: add/edit/remove, сортування.
 // ============================================================
 #include <vector>
 #include <string>
@@ -22,4 +22,8 @@ public:
     size_t size() const               { return students.size(); }
     const Student* at(size_t i) const;
     Student* at(size_t i);
+
+    // --- сортування ---
+    void sortByAvg(bool ascending);   // за середнім балом
+    void sortByName();                // за ПІБ (алфавіт)
 };
