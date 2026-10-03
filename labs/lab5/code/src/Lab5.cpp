@@ -31,13 +31,7 @@ static const TCHAR* ShapeNames[] = {
 
 static const wchar_t* GetShapeNameW(Shape* s)
 {
-    if (dynamic_cast<PointShape*>(s)) return L"Point";
-    if (dynamic_cast<LineShape*>(s)) return L"Line";
-    if (dynamic_cast<RectShape*>(s)) return L"Rect";
-    if (dynamic_cast<EllipseShape*>(s)) return L"Ellipse";
-    if (dynamic_cast<LineWithCircles*>(s)) return L"LineCirc";
-    if (dynamic_cast<CubeWireframe*>(s)) return L"Cube";
-    return L"Unknown";
+    return s ? s->GetName() : L"Unknown";   // polymorphic name, no dynamic_cast
 }
 
 static void UpdateTitle(HWND hWnd, int type)

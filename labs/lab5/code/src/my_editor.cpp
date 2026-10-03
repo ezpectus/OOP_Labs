@@ -47,6 +47,12 @@ void MyEditor::OnMouseDown(int x, int y)
 {
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
+    if (pTempShape)
+    {
+        pTempShape->SetPenStyle(PS_DASH);        // rubber-band preview style
+        pTempShape->SetPenColor(RGB(0, 0, 255)); // blue like lab3
+        pTempShape->ClearFill();
+    }
 }
 
 void MyEditor::OnMouseMove(int x, int y, HWND hWnd)

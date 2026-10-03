@@ -11,20 +11,22 @@ public:
 
     void Show(HDC hdc) override
     {
-        // Draw line using LineShape::Show
+        // Draw line using LineShape::Show (shared virtual Shape fields)
         LineShape::Show(hdc);
 
-        // Draw circles at both endpoints using EllipseShape::Show
-        // We need to call EllipseShape::Show with modified coords
-        // Temporarily set ellipse coords to small circles at endpoints
         int lx1 = x1, ly1 = y1, lx2 = x2, ly2 = y2;
 
-        // Circle at start point (x1, y1) with radius 8
+        // Circles at both endpoints (radius 8) — temp objects inherit our style
         EllipseShape circle1(lx1 - 8, ly1 - 8, lx1 + 8, ly1 + 8);
+        circle1.SetPenStyle(m_penStyle);
+        circle1.SetPenColor(m_penColor);
+        if (m_hasFill) circle1.SetFillColor(m_fillColor);
         circle1.Show(hdc);
 
-        // Circle at end point (x2, y2) with radius 8
         EllipseShape circle2(lx2 - 8, ly2 - 8, lx2 + 8, ly2 + 8);
+        circle2.SetPenStyle(m_penStyle);
+        circle2.SetPenColor(m_penColor);
+        if (m_hasFill) circle2.SetFillColor(m_fillColor);
         circle2.Show(hdc);
     }
 
@@ -42,4 +44,6 @@ public:
     {
         LineShape::GetCoords(a, b, c, d);
     }
+
+    const wchar_t* GetName() const override { return L"LineCirc"; }
 };
