@@ -45,3 +45,36 @@ void StudentGroup::sortByName()
             return a.getName() < b.getName();
         });
 }
+
+double StudentGroup::groupAvg() const
+{
+    if (students.empty()) return 0.0;
+    double sum = 0.0;
+    for (const auto& s : students) sum += s.avg();
+    return sum / students.size();
+}
+
+double StudentGroup::successRate() const
+{
+    if (students.empty()) return 0.0;
+    int ok = 0;
+    for (const auto& s : students)
+        if (!s.hasDebt()) ok++;
+    return 100.0 * ok / students.size();
+}
+
+int StudentGroup::excellentCount() const
+{
+    int n = 0;
+    for (const auto& s : students)
+        if (s.isExcellent()) n++;
+    return n;
+}
+
+int StudentGroup::debtorCount() const
+{
+    int n = 0;
+    for (const auto& s : students)
+        if (s.hasDebt()) n++;
+    return n;
+}

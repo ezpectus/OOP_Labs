@@ -1,7 +1,8 @@
 #pragma once
 // ============================================================
 // StudentGroup.h — контейнер групи студентів (РГР, варіант 13)
-// vector<Student> + операції: add/edit/remove, сортування.
+// vector<Student> + операції: add/edit/remove, сортування,
+// статистика групи.
 // ============================================================
 #include <vector>
 #include <string>
@@ -26,4 +27,10 @@ public:
     // --- сортування ---
     void sortByAvg(bool ascending);   // за середнім балом
     void sortByName();                // за ПІБ (алфавіт)
+
+    // --- статистика групи ---
+    double groupAvg() const;          // середній бал усієї групи
+    double successRate() const;       // % студентів без боргів
+    int excellentCount() const;       // к-сть відмінників
+    int debtorCount() const;          // к-сть боржників
 };
