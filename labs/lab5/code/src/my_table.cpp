@@ -46,6 +46,14 @@ void MyTable::Add(const wchar_t* name, int x1, int y1, int x2, int y2)
     SendMessageW(hList, LB_SETTOPINDEX, rowCount - 1, 0);
 }
 
+void MyTable::Remove(int index)
+{
+    if (!hList) return;
+    if (index < 0 || index >= rowCount) return;
+    SendMessageW(hList, LB_DELETESTRING, index, 0);
+    rowCount--;
+}
+
 void MyTable::Clear()
 {
     if (hList)

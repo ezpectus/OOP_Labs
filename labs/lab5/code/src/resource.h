@@ -12,5 +12,6 @@
 #define IDM_ABOUT       108
 #define IDM_VIEW_TABLE  109
 #define IDM_FILE_SAVE   110
+#define IDM_ERASER      111
 
 #define IDR_TOOLBAR     200

@@ -40,6 +40,8 @@ static void UpdateTitle(HWND hWnd, int type)
     int idx = type - IDM_POINT;
     if (idx >= 0 && idx < 6)
         swprintf(buf, 128, L"%s — [%s]", szTitleBase, ShapeNames[idx]);
+    else if (type == IDM_ERASER)
+        swprintf(buf, 128, L"%s — [Eraser]", szTitleBase);
     else
         swprintf(buf, 128, L"%s", szTitleBase);
     SetWindowText(hWnd, buf);
@@ -67,7 +69,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SendMessage(hToolBar, TB_ADDBITMAP, 0, (LPARAM)&tbab);
 
         const int stdBtns[6] = { 6, 3, 4, 5, 8, 7 };
-        TBBUTTON tbb[6];
+        TBBUTTON tbb[7];
         ZeroMemory(tbb, sizeof(tbb));
         for (int i = 0; i < 6; i++)
         {
@@ -76,7 +78,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             tbb[i].fsState = TBSTATE_ENABLED;
             tbb[i].fsStyle = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
         }
-        SendMessage(hToolBar, TB_ADDBUTTONS, 6, (LPARAM)tbb);
+        // 7th button: eraser tool (STD_CUT = scissors icon)
+        tbb[6].iBitmap   = 0;
+        tbb[6].idCommand = IDM_ERASER;
+        tbb[6].fsState   = TBSTATE_ENABLED;
+        tbb[6].fsStyle   = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
+        SendMessage(hToolBar, TB_ADDBUTTONS, 7, (LPARAM)tbb);
 
         MyEditor::getInstance()->SelectShape(IDM_POINT);
         UpdateTitle(hWnd, IDM_POINT);
@@ -94,6 +101,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_ELLIPSE:
         case IDM_LINECIRC:
         case IDM_CUBE:
+        case IDM_ERASER:
             MyEditor::getInstance()->SelectShape(wmId);
             UpdateTitle(hWnd, wmId);
             break;
@@ -127,6 +135,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int idx = (int)pnmh->idFrom - IDM_POINT;
             if (idx >= 0 && idx < 6)
                 pttt->lpszText = (LPTSTR)ShapeNames[idx];
+            else if (pnmh->idFrom == IDM_ERASER)
+                pttt->lpszText = (LPTSTR)_T("Eraser");
             return 0;
         }
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -134,8 +144,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
     case WM_LBUTTONDOWN:
-        MyEditor::getInstance()->OnMouseDown(LOWORD(lParam), HIWORD(lParam));
-        break;
+    {
+        MyEditor* editor = MyEditor::getInstance();
+        int removed = editor->OnMouseDown(LOWORD(lParam), HIWORD(lParam));
+        if (removed >= 0 && table.IsActive())
+            table.Remove(removed);          // keep table in sync with eraser
+        InvalidateRect(hWnd, NULL, FALSE);
+    }
+    break;
 
     case WM_MOUSEMOVE:
         MyEditor::getInstance()->OnMouseMove(LOWORD(lParam), HIWORD(lParam), hWnd);

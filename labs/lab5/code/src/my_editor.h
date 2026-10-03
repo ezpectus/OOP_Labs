@@ -20,12 +20,13 @@ private:
     MyEditor& operator=(const MyEditor&) = delete;
 
     Shape* CreateShape(int type, int x1, int y1, int x2, int y2);
+    int  HitTestIndex(int x, int y);   // topmost shape index or -1
 
 public:
     ~MyEditor();
     static MyEditor* getInstance();
 
-    void OnMouseDown(int x, int y);
+    int  OnMouseDown(int x, int y);    // returns erased index or -1
     void OnMouseMove(int x, int y, HWND hWnd);
     void OnMouseUp(int x, int y);
     void OnPaint(HDC hdc);
