@@ -23,5 +23,13 @@ int main()
     printf("success: %.1f %%\n", g.successRate());
     printf("excellent: %d, debtors: %d\n",
            g.excellentCount(), g.debtorCount());
+
+    // file roundtrip check
+    if (g.saveToFile(L"test_group.csv"))
+    {
+        StudentGroup g2;
+        if (g2.loadFromFile(L"test_group.csv"))
+            printf("roundtrip: %d students\n", (int)g2.size());
+    }
     return 0;
 }
