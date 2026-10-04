@@ -6,6 +6,7 @@
 #include "ellipse.h"
 #include "linecircles.h"
 #include "cube.h"
+#include "triangle.h"
 #include "resource.h"
 #include <stdio.h>
 
@@ -39,6 +40,7 @@ Shape* MyEditor::CreateShape(int type, int x1, int y1, int x2, int y2)
     case IDM_ELLIPSE:  return new EllipseShape(x1, y1, x2, y2);
     case IDM_LINECIRC: return new LineWithCircles(x1, y1, x2, y2);
     case IDM_CUBE:     return new CubeWireframe(x1, y1, x2, y2);
+    case IDM_TRIANGLE: return new TriangleShape(x1, y1, x2, y2);
     default:           return nullptr;
     }
 }
