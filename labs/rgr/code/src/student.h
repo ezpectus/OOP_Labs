@@ -24,6 +24,7 @@ public:
     const std::wstring& getName()   const { return name; }
     const std::wstring& getBookNo() const { return bookNo; }
     int getGrade(int i) const;
+    const int* getGrades() const { return grades; }
 
     void setName(const std::wstring& v)   { name = v; }
     void setBookNo(const std::wstring& v) { bookNo = v; }
@@ -33,4 +34,8 @@ public:
     double avg()         const;   // середній бал
     bool   hasDebt()     const;   // є хоча б одна оцінка < 60
     bool   isExcellent() const;   // усі оцінки >= 90
+
+    // --- файл (CSV, поля розділені ;) ---
+    std::wstring toCSV() const;                    // рядок для запису
+    bool fromCSV(const std::wstring& line);        // парсинг, false = поганий рядок
 };

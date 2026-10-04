@@ -1,5 +1,6 @@
 // Student.cpp — реалізація класу Student
 #include "student.h"
+#include <sstream>
 
 Student::Student()
 {
@@ -42,5 +43,30 @@ bool Student::isExcellent() const
 {
     for (int i = 0; i < GRADE_COUNT; i++)
         if (grades[i] < 90) return false;
+    return true;
+}
+
+// "ПІБ;ЗАЛІКОВКА;g1;g2;g3;g4;g5"
+std::wstring Student::toCSV() const
+{
+    std::wstringstream ss;
+    ss << name << L';' << bookNo;
+    for (int i = 0; i < GRADE_COUNT; i++) ss << L';' << grades[i];
+    return ss.str();
+}
+
+bool Student::fromCSV(const std::wstring& line)
+{
+    std::wstringstream ss(line);
+    std::wstring field;
+    if (!std::getline(ss, field, L';')) return false;
+    name = field;
+    if (!std::getline(ss, field, L';')) return false;
+    bookNo = field;
+    for (int i = 0; i < GRADE_COUNT; i++)
+    {
+        if (!std::getline(ss, field, L';')) return false;
+        grades[i] = _wtoi(field.c_str());
+    }
     return true;
 }
