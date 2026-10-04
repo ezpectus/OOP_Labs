@@ -2,7 +2,7 @@
 // ============================================================
 // StudentGroup.h — контейнер групи студентів (РГР, варіант 13)
 // vector<Student> + операції: add/edit/remove, сортування,
-// статистика групи.
+// статистика групи, збереження/завантаження CSV-файлу.
 // ============================================================
 #include <vector>
 #include <string>
@@ -33,4 +33,8 @@ public:
     double successRate() const;       // % студентів без боргів
     int excellentCount() const;       // к-сть відмінників
     int debtorCount() const;          // к-сть боржників
+
+    // --- файл (CSV; заголовок-рядок пропускається) ---
+    bool saveToFile(const std::wstring& path) const;
+    bool loadFromFile(const std::wstring& path);
 };
