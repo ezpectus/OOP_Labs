@@ -1,0 +1,29 @@
+// RGR.rc — меню програми (РГР, варіант 13)
+#include <windows.h>
+#include "resource.h"
+
+RGR_MENU MENU
+BEGIN
+    POPUP "&Файл"
+    BEGIN
+        MENUITEM "&Новий список",        IDM_FILE_NEW
+        MENUITEM "&Відкрити...",         IDM_FILE_OPEN
+        MENUITEM "&Зберегти",            IDM_FILE_SAVE
+        MENUITEM "Зберегти &як...",      IDM_FILE_SAVEAS
+        MENUITEM SEPARATOR
+        MENUITEM "В&ихід",               IDM_FILE_EXIT
+    END
+    POPUP "&Студент"
+    BEGIN
+        MENUITEM "&Додати...",           IDM_ST_ADD
+        MENUITEM "&Редагувати...",       IDM_ST_EDIT
+        MENUITEM "Видалити\tDel",        IDM_ST_REMOVE
+    END
+    POPUP "Со&ртування"
+    BEGIN
+        MENUITEM "За &середнім балом",   IDM_SORT_AVG
+        MENUITEM "За &ПІБ",              IDM_SORT_NAME
+    END
+    MENUITEM "С&татистика",              IDM_STATS_SHOW
+    MENUITEM "Про про&граму",            IDM_ABOUT
+END
