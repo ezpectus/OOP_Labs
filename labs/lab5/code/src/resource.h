@@ -15,5 +15,6 @@
 #define IDM_FILE_SAVE   111
 #define IDM_ERASER      112
 #define IDM_FILLCOLOR   113
+#define IDM_SELECT      114
 
 #define IDR_TOOLBAR     200
