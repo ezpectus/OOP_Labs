@@ -1,8 +1,7 @@
 // ============================================================
 // main.cpp — РГР, варіант 13
 // Програма списку студентів групи з розрахунками успішності.
-// Головне вікно: ListView (таблиця) + меню Файл/Студент/
-// Сортування/Статистика. Діалоги Add/Edit — окремий модуль.
+// Головне вікно: ListView (таблиця) + меню.
 // ============================================================
 #include <windows.h>
 #include <commctrl.h>
@@ -13,7 +12,6 @@
 
 static StudentGroup g_group;
 static HWND g_hList = nullptr;
-static wchar_t g_filePath[MAX_PATH] = L"";
 
 // ---------- ListView ----------
 
@@ -39,12 +37,59 @@ static void InitListView(HWND hList)
     }
 }
 
-static int SelectedRow()
+static void RefreshList()
 {
-    return ListView_GetNextItem(g_hList, -1, LVNI_SELECTED);
+    ListView_DeleteAllItems(g_hList);
+    wchar_t buf[32];
+    for (size_t i = 0; i < g_group.size(); i++)
+    {
+        const Student* s = g_group.at(i);
+
+        LVITEMW it = {};
+        it.mask = LVIF_TEXT;
+        it.iItem = (int)i;
+        swprintf_s(buf, L"%d", (int)i + 1);
+        it.pszText = buf;
+        ListView_InsertItem(g_hList, &it);
+
+        ListView_SetItemText(g_hList, (int)i, 1,
+            const_cast<LPWSTR>(s->getName().c_str()));
+        ListView_SetItemText(g_hList, (int)i, 2,
+            const_cast<LPWSTR>(s->getBookNo().c_str()));
+        for (int g = 0; g < Student::GRADE_COUNT; g++)
+        {
+            swprintf_s(buf, L"%d", s->getGrade(g));
+            ListView_SetItemText(g_hList, (int)i, 3 + g, buf);
+        }
+        swprintf_s(buf, L"%.1f", s->avg());
+        ListView_SetItemText(g_hList, (int)i, 8, buf);
+
+        const wchar_t* status = s->isExcellent() ? L"Відмінник" :
+                                (s->hasDebt()   ? L"Борги" : L"ОК");
+        ListView_SetItemText(g_hList, (int)i, 9, const_cast<LPWSTR>(status));
+    }
 }
 
-// ---------- дії ----------
+static void SeedDemo()
+{
+    const wchar_t* names[] = {
+        L"Шевченко Іван", L"Коваленко Марія", L"Бондар Петро",
+        L"Мельник Олена", L"Ткач Андрій"
+    };
+    const wchar_t* books[] = {
+        L"ІМ-051-01", L"ІМ-051-02", L"ІМ-051-03", L"ІМ-051-04", L"ІМ-051-05"
+    };
+    const int gr[][5] = {
+        {95, 92, 91, 90, 94}, {78, 82, 75, 80, 85}, {55, 60, 48, 72, 51},
+        {90, 91, 93, 92, 90}, {64, 70, 58, 66, 74}
+    };
+    for (int i = 0; i < 5; i++)
+    {
+        Student s(names[i], books[i]);
+        for (int g = 0; g < 5; g++) s.setGrade(g, gr[i][g]);
+        g_group.add(s);
+    }
+}
 
 // ---------- WndProc ----------
 
@@ -58,6 +103,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             0, 0, 0, 0, hWnd, (HMENU)IDC_LIST,
             GetModuleHandleW(nullptr), nullptr);
         InitListView(g_hList);
+        SeedDemo();
+        RefreshList();
         return 0;
 
     case WM_SIZE:
