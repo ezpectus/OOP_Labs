@@ -37,5 +37,8 @@ public:
     Shape* GetShape(int i) const { return (i >= 0 && i < shapeCount) ? pcshape[i] : NULL; }
 
     void PickFillColor(HWND hWnd);
+    void PickPenColor(HWND hWnd);
+    void ClearAll();                     // remove every shape (bonus)
+    int  DeleteSelected();               // Del key: erase selected, returns index or -1 (bonus)
     void SaveToFile(const wchar_t* filename);
 };

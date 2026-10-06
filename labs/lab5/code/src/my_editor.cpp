@@ -166,6 +166,57 @@ void MyEditor::PickFillColor(HWND hWnd)
         pSelected->SetFillColor(cc.rgbResult);
 }
 
+void MyEditor::PickPenColor(HWND hWnd)
+{
+    if (!pSelected)
+    {
+        MessageBox(hWnd,
+            _T("Select an object with the Select tool first"),
+            _T("Pen color"), MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+    static COLORREF custom[16] = { 0 };
+    CHOOSECOLOR cc;
+    ZeroMemory(&cc, sizeof(cc));
+    cc.lStructSize  = sizeof(cc);
+    cc.hwndOwner    = hWnd;
+    cc.lpCustColors = custom;
+    cc.Flags        = CC_FULLOPEN;
+    if (ChooseColor(&cc))
+        pSelected->SetPenColor(cc.rgbResult);
+}
+
+void MyEditor::ClearAll()
+{
+    for (int i = 0; i < shapeCount; i++)
+    {
+        delete pcshape[i];
+        pcshape[i] = NULL;
+    }
+    shapeCount = 0;
+    pSelected  = NULL;
+}
+
+int MyEditor::DeleteSelected()
+{
+    if (!pSelected) return -1;
+    for (int i = 0; i < shapeCount; i++)
+    {
+        if (pcshape[i] == pSelected)
+        {
+            int removed = i;
+            delete pcshape[i];
+            for (int j = i; j < shapeCount - 1; j++)
+                pcshape[j] = pcshape[j + 1];
+            pcshape[--shapeCount] = NULL;
+            pSelected = NULL;
+            return removed;
+        }
+    }
+    pSelected = NULL;
+    return -1;
+}
+
 void MyEditor::SaveToFile(const wchar_t* filename)
 {
     FILE* fout;
