@@ -21,4 +21,14 @@
 #define IDM_STATS_SHOW  40030
 #define IDM_ABOUT       40040
 
+// --- діалог Add/Edit ---
+#define IDD_STUDENT     50001
+#define IDC_ED_NAME     50101
+#define IDC_ED_BOOK     50102
+#define IDC_ED_G1       50103
+#define IDC_ED_G2       50104
+#define IDC_ED_G3       50105
+#define IDC_ED_G4       50106
+#define IDC_ED_G5       50107
+
 #define IDC_LIST        60001

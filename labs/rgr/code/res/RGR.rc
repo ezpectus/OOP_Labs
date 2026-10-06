@@ -1,4 +1,4 @@
-// RGR.rc — меню програми (РГР, варіант 13)
+// RGR.rc — меню та діалоги програми (РГР, варіант 13)
 #include <windows.h>
 #include "resource.h"
 
@@ -26,4 +26,31 @@ BEGIN
     END
     MENUITEM "С&татистика",              IDM_STATS_SHOW
     MENUITEM "Про про&граму",            IDM_ABOUT
+END
+
+IDD_STUDENT DIALOGEX 0, 0, 230, 160
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Студент"
+FONT 9, "Segoe UI"
+BEGIN
+    LTEXT        "ПІБ:",                 -1,        10,  12, 60, 10
+    EDITTEXT     IDC_ED_NAME,                      75,  10, 145, 14
+    LTEXT        "№ залікової:",         -1,        10,  32, 60, 10
+    EDITTEXT     IDC_ED_BOOK,                      75,  30, 145, 14
+
+    LTEXT        "Оцінка 1:",            -1,        10,  55, 45, 10
+    EDITTEXT     IDC_ED_G1,                        60,  53, 30, 14
+    LTEXT        "Оцінка 2:",            -1,       100,  55, 45, 10
+    EDITTEXT     IDC_ED_G2,                       150,  53, 30, 14
+
+    LTEXT        "Оцінка 3:",            -1,        10,  75, 45, 10
+    EDITTEXT     IDC_ED_G3,                        60,  73, 30, 14
+    LTEXT        "Оцінка 4:",            -1,       100,  75, 45, 10
+    EDITTEXT     IDC_ED_G4,                       150,  73, 30, 14
+
+    LTEXT        "Оцінка 5:",            -1,        10,  95, 45, 10
+    EDITTEXT     IDC_ED_G5,                        60,  93, 30, 14
+
+    DEFPUSHBUTTON "OK",       IDOK,      65, 125, 50, 16
+    PUSHBUTTON    "Скасувати", IDCANCEL, 120, 125, 50, 16
 END
