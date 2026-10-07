@@ -40,4 +40,7 @@ public:
     void ClearAll();                     // remove every shape (bonus)
     int  DeleteSelected();               // Del key: erase selected, returns index or -1 (bonus)
     void SaveToFile(const wchar_t* filename);
+    int  LoadFromFile(const wchar_t* filename);   // restore objects, count loaded or -1 (bonus)
+    void SelectIndex(int idx);                    // table row -> red frame on canvas (bonus)
+    int  DeleteIndex(int idx);                    // table row -> delete shape (bonus)
 };

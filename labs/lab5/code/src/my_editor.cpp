@@ -1,4 +1,4 @@
-// my_editor.cpp — MyEditor classic Singleton implementation
+// my_editor.cpp — MyEditor Meyers Singleton implementation
 #include "my_editor.h"
 #include "point.h"
 #include "line.h"
@@ -9,10 +9,10 @@
 #include "triangle.h"
 #include "resource.h"
 #include <stdio.h>
+#include <string.h>
+#include <wchar.h>
 #include <tchar.h>
 #include <commdlg.h>
-
-MyEditor* MyEditor::p_instance = nullptr;
 
 MyEditor::MyEditor() : shapeCount(0), currentType(IDM_POINT), isDrawing(false), pTempShape(NULL), pSelected(NULL)
 {
@@ -27,9 +27,8 @@ MyEditor::~MyEditor()
 
 MyEditor* MyEditor::getInstance()
 {
-    if (!p_instance)
-        p_instance = new MyEditor();
-    return p_instance;
+    static MyEditor instance;   // Meyers: function-local static, C++11 thread-safe
+    return &instance;
 }
 
 Shape* MyEditor::CreateShape(int type, int x1, int y1, int x2, int y2)
@@ -232,4 +231,56 @@ void MyEditor::SaveToFile(const wchar_t* filename)
         fwprintf(fout, L"%s\t%d\t%d\t%d\t%d\n", name, x1, y1, x2, y2);
     }
     fclose(fout);
+}
+
+// name written by SaveToFile -> shape type id
+static int TypeFromName(const wchar_t* name)
+{
+    if (!wcscmp(name, L"Point"))     return IDM_POINT;
+    if (!wcscmp(name, L"Line"))      return IDM_LINE;
+    if (!wcscmp(name, L"Rectangle")) return IDM_RECT;
+    if (!wcscmp(name, L"Ellipse"))   return IDM_ELLIPSE;
+    if (!wcscmp(name, L"LineCirc"))  return IDM_LINECIRC;
+    if (!wcscmp(name, L"Cube"))      return IDM_CUBE;
+    if (!wcscmp(name, L"Triangle"))  return IDM_TRIANGLE;
+    return -1;
+}
+
+int MyEditor::LoadFromFile(const wchar_t* filename)
+{
+    FILE* fin;
+    if (_wfopen_s(&fin, filename, L"rt") != 0 || !fin) return -1;
+
+    int loaded = 0;
+    wchar_t buf[256];
+    while (fgetws(buf, 256, fin) && shapeCount < N)
+    {
+        wchar_t name[64];
+        int x1, y1, x2, y2;
+        if (swscanf(buf, L"%63s %d %d %d %d", name, &x1, &y1, &x2, &y2) != 5)
+            continue;                       // skip malformed lines
+        int type = TypeFromName(name);
+        if (type < 0) continue;             // unknown class name
+        pcshape[shapeCount] = CreateShape(type, x1, y1, x2, y2);
+        if (pcshape[shapeCount]) { shapeCount++; loaded++; }
+    }
+    fclose(fin);
+    return loaded;
+}
+
+void MyEditor::SelectIndex(int idx)
+{
+    // table row i == pcshape[i] (table is kept in sync row-by-row)
+    pSelected = (idx >= 0 && idx < shapeCount) ? pcshape[idx] : NULL;
+}
+
+int MyEditor::DeleteIndex(int idx)
+{
+    if (idx < 0 || idx >= shapeCount) return -1;
+    if (pcshape[idx] == pSelected) pSelected = NULL;
+    delete pcshape[idx];
+    for (int i = idx; i < shapeCount - 1; i++)
+        pcshape[i] = pcshape[i + 1];
+    pcshape[--shapeCount] = NULL;
+    return idx;
 }

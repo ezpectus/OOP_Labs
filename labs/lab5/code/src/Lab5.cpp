@@ -1,7 +1,7 @@
-// Lab5.cpp — main file
+﻿// Lab5.cpp — main file
 // Lab 5: Multi-window UI, Singleton, table, file save
 // Stepanenko Denys, IM-051, 2026
-// Variant: J=16 (even) — classic Singleton
+// Variant: J=13 (odd) — Meyers Singleton
 
 #include <windows.h>
 #include <commctrl.h>
@@ -24,6 +24,22 @@ static TCHAR szTitleBase[] = _T("Lab 5 — Stepanenko Denys, IM-051");
 
 static MyTable table;
 static HINSTANCE g_hInst = NULL;
+static HWND g_hMain = NULL;   // repainted from table callbacks
+
+static void SyncTableToEditor()
+{
+    // rebuild all rows — used after loading a file (indexes must match)
+    if (!table.IsActive()) return;
+    table.Clear();
+    MyEditor* editor = MyEditor::getInstance();
+    for (int i = 0; i < editor->GetCount(); i++)
+    {
+        Shape* s = editor->GetShape(i);
+        int x1, y1, x2, y2;
+        s->GetCoords(x1, y1, x2, y2);
+        table.Add(s->GetName(), x1, y1, x2, y2);
+    }
+}
 
 static const TCHAR* ShapeNames[] = {
     _T("Point"), _T("Line"), _T("Rectangle"), _T("Ellipse"),
@@ -59,6 +75,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
     {
         g_hInst = ((LPCREATESTRUCT)lParam)->hInstance;
+        g_hMain = hWnd;
 
         hToolBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
             WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS,
@@ -130,17 +147,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         case IDM_VIEW_TABLE:
             table.Activate(hWnd, g_hInst);
+            if (table.IsActive()) SyncTableToEditor();  // opened after load — fill rows
             break;
         case IDM_FILE_SAVE:
             MyEditor::getInstance()->SaveToFile(L"shapes.txt");
             MessageBox(hWnd, _T("Saved to shapes.txt"), _T("File"), MB_OK);
             break;
+        case IDM_FILE_LOAD:
+        {
+            int n = MyEditor::getInstance()->LoadFromFile(L"shapes.txt");
+            if (n < 0)
+                MessageBox(hWnd, _T("Cannot open shapes.txt"), _T("File"),
+                    MB_OK | MB_ICONWARNING);
+            else
+            {
+                SyncTableToEditor();
+                InvalidateRect(hWnd, NULL, FALSE);
+                TCHAR msg[64];
+                _stprintf_s(msg, 64, _T("Loaded %d object(s)"), n);
+                MessageBox(hWnd, msg, _T("File"), MB_OK);
+            }
+            break;
+        }
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
         case IDM_ABOUT:
             MessageBox(hWnd,
-                _T("Lab 5 — Multi-window UI\nStepanenko Denys, IM-051\nJ=16: classic Singleton, independent my_table module"),
+                _T("Lab 5 — Multi-window UI\nStepanenko Denys, IM-051\nJ=13: Meyers Singleton, independent my_table module"),
                 _T("About"), MB_OK | MB_ICONINFORMATION);
             break;
         default:

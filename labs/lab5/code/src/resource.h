@@ -18,5 +18,6 @@
 #define IDM_SELECT      114
 #define IDM_PENCOLOR    115
 #define IDM_CLEAR       116
+#define IDM_FILE_LOAD   117
 
 #define IDR_TOOLBAR     200
