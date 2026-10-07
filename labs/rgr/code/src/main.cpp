@@ -1,7 +1,8 @@
 // ============================================================
 // main.cpp — РГР, варіант 13
 // Програма списку студентів групи з розрахунками успішності.
-// Головне вікно: ListView (таблиця) + меню.
+// Головне вікно: ListView (таблиця) + меню Файл/Студент/
+// Сортування/Статистика. Діалоги Add/Edit — окремий модуль.
 // ============================================================
 #include <windows.h>
 #include <commctrl.h>
@@ -9,6 +10,7 @@
 #include "resource.h"
 #include "student.h"
 #include "student_group.h"
+#include "dialogs.h"
 
 static StudentGroup g_group;
 static HWND g_hList = nullptr;
@@ -70,6 +72,23 @@ static void RefreshList()
     }
 }
 
+static int SelectedRow()
+{
+    return ListView_GetNextItem(g_hList, -1, LVNI_SELECTED);
+}
+
+// ---------- дії ----------
+
+static void DoAdd(HWND hWnd)
+{
+    Student s;
+    if (StudentEditDialog(hWnd, L"Додати студента", s))
+    {
+        g_group.add(s);
+        RefreshList();
+    }
+}
+
 static void SeedDemo()
 {
     const wchar_t* names[] = {
@@ -114,7 +133,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_COMMAND:
         switch (LOWORD(wp))
         {
-        case IDM_FILE_EXIT: DestroyWindow(hWnd); return 0;
+        case IDM_FILE_EXIT:   DestroyWindow(hWnd);     return 0;
+        case IDM_ST_ADD:      DoAdd(hWnd);             return 0;
         }
         break;
 
