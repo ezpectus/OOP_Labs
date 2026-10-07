@@ -69,7 +69,14 @@ INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
     switch (message)
     {
     case WM_INITDIALOG:
-        if (g_pTable) g_pTable->SetHwnd(hDlg);
+        if (g_pTable)
+        {
+            g_pTable->SetHwnd(hDlg);
+            // column stops so tab-separated rows align: name, x1, y1, x2, y2
+            int tabs[4] = { 70, 120, 160, 200 };
+            SendMessageW(GetDlgItem(hDlg, IDC_TABLE_LIST),
+                         LB_SETTABSTOPS, 4, (LPARAM)tabs);
+        }
         return TRUE;
 
     case WM_SYSCOMMAND:
