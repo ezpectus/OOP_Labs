@@ -12,30 +12,33 @@ public:
     void Show(HDC hdc) override
     {
         int lx1 = x1, ly1 = y1, lx2 = x2, ly2 = y2;
-
-        // Draw front face rectangle using RectShape::Show
-        RectShape front(lx1, ly1, lx2, ly2);
-        front.Show(hdc);
-
-        // Calculate offset for back face (isometric projection)
         int dx = (lx2 - lx1) / 4;
         int dy = (ly2 - ly1) / 4;
 
-        // Draw back face rectangle
+        // Helper: style a temp part with our pen settings
+        // (wireframe: faces are NOT filled)
+        RectShape front(lx1, ly1, lx2, ly2);
+        front.SetPenStyle(m_penStyle); front.SetPenColor(m_penColor); front.ClearFill();
+        front.Show(hdc);
+
         RectShape back(lx1 + dx, ly1 - dy, lx2 + dx, ly2 - dy);
+        back.SetPenStyle(m_penStyle); back.SetPenColor(m_penColor); back.ClearFill();
         back.Show(hdc);
 
-        // Draw connecting lines using LineShape::Show
         LineShape edge1(lx1, ly1, lx1 + dx, ly1 - dy);
+        edge1.SetPenStyle(m_penStyle); edge1.SetPenColor(m_penColor);
         edge1.Show(hdc);
 
         LineShape edge2(lx2, ly1, lx2 + dx, ly1 - dy);
+        edge2.SetPenStyle(m_penStyle); edge2.SetPenColor(m_penColor);
         edge2.Show(hdc);
 
         LineShape edge3(lx2, ly2, lx2 + dx, ly2 - dy);
+        edge3.SetPenStyle(m_penStyle); edge3.SetPenColor(m_penColor);
         edge3.Show(hdc);
 
         LineShape edge4(lx1, ly2, lx1 + dx, ly2 - dy);
+        edge4.SetPenStyle(m_penStyle); edge4.SetPenColor(m_penColor);
         edge4.Show(hdc);
     }
 
@@ -53,4 +56,6 @@ public:
     {
         RectShape::GetCoords(a, b, c, d);
     }
+
+    const wchar_t* GetName() const override { return L"Cube"; }
 };
