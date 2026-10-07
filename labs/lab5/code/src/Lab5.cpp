@@ -26,6 +26,24 @@ static MyTable table;
 static HINSTANCE g_hInst = NULL;
 static HWND g_hMain = NULL;   // repainted from table callbacks
 
+// --- table -> editor hooks (bonus): table only passes a row index ---
+static void OnTableRowSelected(int idx)
+{
+    // click a row -> red frame appears around that shape on canvas
+    MyEditor::getInstance()->SelectIndex(idx);
+    if (g_hMain) InvalidateRect(g_hMain, NULL, FALSE);
+}
+
+static void OnTableRowDeleted(int idx)
+{
+    // "Delete selected" in the table -> object removed, row removed
+    if (MyEditor::getInstance()->DeleteIndex(idx) >= 0)
+    {
+        table.Remove(idx);
+        if (g_hMain) InvalidateRect(g_hMain, NULL, FALSE);
+    }
+}
+
 static void SyncTableToEditor()
 {
     // rebuild all rows — used after loading a file (indexes must match)
@@ -76,6 +94,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         g_hInst = ((LPCREATESTRUCT)lParam)->hInstance;
         g_hMain = hWnd;
+        table.SetOnRowSelect(OnTableRowSelected);   // row -> highlight
+        table.SetOnRowDelete(OnTableRowDeleted);    // row -> delete
 
         hToolBar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
             WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS,

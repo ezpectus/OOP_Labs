@@ -7,7 +7,8 @@
 static MyTable* g_pTable = nullptr;
 static INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
-MyTable::MyTable() : hDlg(NULL), hList(NULL), rowCount(0) {}
+MyTable::MyTable() : hDlg(NULL), hList(NULL), rowCount(0),
+                     onRowSelect(NULL), onRowDelete(NULL) {}
 
 MyTable::~MyTable() { Close(); }
 
@@ -63,6 +64,13 @@ void MyTable::Clear()
     }
 }
 
+int MyTable::GetSelectedRow() const
+{
+    if (!hList) return -1;
+    int i = (int)SendMessageW(hList, LB_GETCURSEL, 0, 0);
+    return (i == LB_ERR) ? -1 : i;
+}
+
 // Dialog procedure — static, internal to this module
 INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -85,6 +93,19 @@ INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL) { DestroyWindow(hDlg); return TRUE; }
+        // row click -> owner gets the index through the callback
+        if (LOWORD(wParam) == IDC_TABLE_LIST && HIWORD(wParam) == LBN_SELCHANGE
+            && g_pTable)
+        {
+            g_pTable->NotifyRowSelect(g_pTable->GetSelectedRow());
+            return TRUE;
+        }
+        // "Delete selected" button -> owner deletes, table just reports
+        if (LOWORD(wParam) == IDC_TABLE_DELETE && g_pTable)
+        {
+            g_pTable->NotifyRowDelete(g_pTable->GetSelectedRow());
+            return TRUE;
+        }
         break;
 
     case WM_DESTROY:
