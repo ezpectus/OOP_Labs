@@ -89,6 +89,30 @@ static void DoAdd(HWND hWnd)
     }
 }
 
+static void DoEdit(HWND hWnd)
+{
+    int row = SelectedRow();
+    if (row < 0) return;
+    Student s = *g_group.at((size_t)row);
+    if (StudentEditDialog(hWnd, L"Редагувати студента", s))
+    {
+        g_group.updateAt((size_t)row, s);
+        RefreshList();
+    }
+}
+
+static void DoRemove(HWND hWnd)
+{
+    int row = SelectedRow();
+    if (row < 0) return;
+    if (MessageBoxW(hWnd, L"Видалити вибраного студента?",
+                    L"Підтвердження", MB_YESNO | MB_ICONQUESTION) == IDYES)
+    {
+        g_group.removeAt((size_t)row);
+        RefreshList();
+    }
+}
+
 static void SeedDemo()
 {
     const wchar_t* names[] = {
@@ -130,11 +154,17 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         MoveWindow(g_hList, 0, 0, LOWORD(lp), HIWORD(lp), TRUE);
         return 0;
 
+    case WM_KEYDOWN:
+        if (wp == VK_DELETE) DoRemove(hWnd);
+        return 0;
+
     case WM_COMMAND:
         switch (LOWORD(wp))
         {
         case IDM_FILE_EXIT:   DestroyWindow(hWnd);     return 0;
         case IDM_ST_ADD:      DoAdd(hWnd);             return 0;
+        case IDM_ST_EDIT:     DoEdit(hWnd);            return 0;
+        case IDM_ST_REMOVE:   DoRemove(hWnd);          return 0;
         }
         break;
 
