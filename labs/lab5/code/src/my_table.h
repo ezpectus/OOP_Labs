@@ -16,6 +16,7 @@ public:
     void Activate(HWND hParent, HINSTANCE hInst);
     void Close();
     void Add(const wchar_t* name, int x1, int y1, int x2, int y2);
+    void Remove(int index);   // erase row (eraser tool sync)
     void Clear();
     bool IsActive() const { return hDlg != NULL; }
     HWND GetHwnd() const { return hDlg; }

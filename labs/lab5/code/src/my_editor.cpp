@@ -43,8 +43,29 @@ Shape* MyEditor::CreateShape(int type, int x1, int y1, int x2, int y2)
     }
 }
 
-void MyEditor::OnMouseDown(int x, int y)
+int MyEditor::HitTestIndex(int x, int y)
 {
+    // topmost first: iterate from the end (later = drawn on top)
+    for (int i = shapeCount - 1; i >= 0; i--)
+        if (pcshape[i] && pcshape[i]->HitTest(x, y))
+            return i;
+    return -1;
+}
+
+int MyEditor::OnMouseDown(int x, int y)
+{
+    if (currentType == IDM_ERASER)
+    {
+        int idx = HitTestIndex(x, y);
+        if (idx >= 0)
+        {
+            delete pcshape[idx];
+            for (int i = idx; i < shapeCount - 1; i++)
+                pcshape[i] = pcshape[i + 1];
+            pcshape[--shapeCount] = NULL;
+        }
+        return idx;   // erased index or -1 (caller syncs the table)
+    }
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
     if (pTempShape)
@@ -53,6 +74,7 @@ void MyEditor::OnMouseDown(int x, int y)
         pTempShape->SetPenColor(RGB(0, 0, 255)); // blue like lab3
         pTempShape->ClearFill();
     }
+    return -1;
 }
 
 void MyEditor::OnMouseMove(int x, int y, HWND hWnd)

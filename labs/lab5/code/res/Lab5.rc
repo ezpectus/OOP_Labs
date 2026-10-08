@@ -17,6 +17,8 @@ BEGIN
         MENUITEM "&Ellipse",        IDM_ELLIPSE
         MENUITEM "Line w/ &Circles", IDM_LINECIRC
         MENUITEM "&Cube Wireframe", IDM_CUBE
+        MENUITEM SEPARATOR
+        MENUITEM "&Eraser",         IDM_ERASER
     END
     POPUP "&View"
     BEGIN
