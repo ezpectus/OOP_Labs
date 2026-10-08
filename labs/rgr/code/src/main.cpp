@@ -165,6 +165,14 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         case IDM_ST_ADD:      DoAdd(hWnd);             return 0;
         case IDM_ST_EDIT:     DoEdit(hWnd);            return 0;
         case IDM_ST_REMOVE:   DoRemove(hWnd);          return 0;
+        case IDM_SORT_AVG:
+            g_group.sortByAvg(false);
+            RefreshList();
+            return 0;
+        case IDM_SORT_NAME:
+            g_group.sortByName();
+            RefreshList();
+            return 0;
         }
         break;
 
