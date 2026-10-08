@@ -6,6 +6,13 @@ Multi-window interface, Singleton pattern, independent table module, saving obje
 ## Variant
 J=13 (odd): Meyers Singleton (function-local static in getInstance). Independent `my_table` module (no project dependencies). Non-modal table dialog with listbox. File save (tab-separated: name, x1, y1, x2, y2).
 
+## Extra features (beyond spec)
+- **Load from file** — File → Load restores all shapes from `shapes.txt` and rebuilds the table (`LoadFromFile` + `SyncTableToEditor`)
+- **Row → highlight** — click a table row: the shape gets a red dashed frame (`LBN_SELCHANGE` → `TableRowCallback` → `SelectIndex`)
+- **Row → delete** — "Delete selected" button in the table dialog removes the row AND the shape (`NotifyRowDelete` → `DeleteIndex`)
+- Table↔editor link uses plain function-pointer callbacks — `my_table` stays fully independent (Observer-style, zero new deps)
+- Select tool, Eraser, Fill/Pen color via `ChooseColor`, Del key, Clear canvas, Triangle shape
+
 ## Structure
 ```
 lab5/
