@@ -62,6 +62,9 @@
 - **Незалежний модуль `my_table`** — окремий клас `MyTable` зі своїм `.rc` файлом, не залежить від інших модулів проєкту (не включає їхні `.h` файли)
 - **Немодальне вікно таблиці** — `CreateDialog` замість `DialogBox`, обробка через `IsDialogMessage` у циклі повідомлень
 - **Запис об'єктів у файл** — tab-separated формат: `назва\tx1\ty1\tx2\ty2`
+- **Читання об'єктів із файлу** (бонус) — той самий формат парситься назад, фігури відновлюються на полотні й у таблиці
+- **Виділення рядка таблиці → підсвітка об'єкта** (бонус) — клік по рядку обводить фігуру червоною рамкою
+- **Виділення рядка → вилучення об'єкта** (бонус) — кнопка «Delete selected» у діалозі таблиці видаляє фігуру й рядок; обидва бонуси реалізовані через callback-вказівники — `my_table` лишається незалежним
 - Усі фігури та Toolbar з Lab4 збережено
 
 ---
@@ -80,6 +83,23 @@
 
 static MyTable table;
 static HINSTANCE g_hInst = NULL;
+static HWND g_hMain = NULL;   // repainted from table callbacks
+
+// --- table -> editor hooks (bonus): table only passes a row index ---
+static void OnTableRowSelected(int idx)
+{
+    MyEditor::getInstance()->SelectIndex(idx);   // row -> red frame on canvas
+    if (g_hMain) InvalidateRect(g_hMain, NULL, FALSE);
+}
+
+static void OnTableRowDeleted(int idx)
+{
+    if (MyEditor::getInstance()->DeleteIndex(idx) >= 0)
+    {
+        table.Remove(idx);
+        if (g_hMain) InvalidateRect(g_hMain, NULL, FALSE);
+    }
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -89,6 +109,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
         // ... toolbar setup ...
+        g_hMain = hWnd;
+        table.SetOnRowSelect(OnTableRowSelected);   // row -> highlight
+        table.SetOnRowDelete(OnTableRowDeleted);    // row -> delete
         MyEditor::getInstance()->SelectShape(IDM_POINT);
         break;
 
@@ -102,11 +125,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         case IDM_VIEW_TABLE:
             table.Activate(hWnd, g_hInst);  // non-modal table window
+            if (table.IsActive()) SyncTableToEditor();
             break;
         case IDM_FILE_SAVE:
             MyEditor::getInstance()->SaveToFile(L"shapes.txt");
             MessageBox(hWnd, _T("Saved to shapes.txt"), _T("File"), MB_OK);
             break;
+        case IDM_FILE_LOAD:
+        {
+            int n = MyEditor::getInstance()->LoadFromFile(L"shapes.txt");
+            if (n >= 0) { SyncTableToEditor(); InvalidateRect(hWnd, NULL, FALSE); }
+            break;
+        }
         // ...
         }
     }
@@ -186,6 +216,9 @@ public:
     Shape* GetShape(int i) const { return (i >= 0 && i < shapeCount) ? pcshape[i] : NULL; }
 
     void SaveToFile(const wchar_t* filename);
+    int  LoadFromFile(const wchar_t* filename);   // bonus: restore objects
+    void SelectIndex(int idx);                    // bonus: table row -> frame
+    int  DeleteIndex(int idx);                    // bonus: table row -> delete
 };
 ```
 
@@ -205,19 +238,50 @@ void MyEditor::SaveToFile(const wchar_t* filename)
 
     for (int i = 0; i < shapeCount; i++)
     {
-        const wchar_t* name = L"Unknown";
-        if (dynamic_cast<PointShape*>(pcshape[i])) name = L"Point";
-        else if (dynamic_cast<LineShape*>(pcshape[i])) name = L"Line";
-        else if (dynamic_cast<RectShape*>(pcshape[i])) name = L"Rect";
-        else if (dynamic_cast<EllipseShape*>(pcshape[i])) name = L"Ellipse";
-        else if (dynamic_cast<LineWithCircles*>(pcshape[i])) name = L"LineCirc";
-        else if (dynamic_cast<CubeWireframe*>(pcshape[i])) name = L"Cube";
+        const wchar_t* name = pcshape[i]->GetName();   // polymorphic, no dynamic_cast
 
         int x1, y1, x2, y2;
         pcshape[i]->GetCoords(x1, y1, x2, y2);
         fwprintf(fout, L"%s\t%d\t%d\t%d\t%d\n", name, x1, y1, x2, y2);
     }
     fclose(fout);
+}
+
+int MyEditor::LoadFromFile(const wchar_t* filename)   // bonus
+{
+    FILE* fin;
+    if (_wfopen_s(&fin, filename, L"rt") != 0 || !fin) return -1;
+
+    int loaded = 0;
+    wchar_t buf[256];
+    while (fgetws(buf, 256, fin) && shapeCount < N)
+    {
+        wchar_t name[64]; int x1, y1, x2, y2;
+        if (swscanf(buf, L"%63s %d %d %d %d", name, &x1, &y1, &x2, &y2) != 5)
+            continue;                        // skip malformed lines
+        int type = TypeFromName(name);       // "Line" -> IDM_LINE, ...
+        if (type < 0) continue;
+        pcshape[shapeCount] = CreateShape(type, x1, y1, x2, y2);
+        if (pcshape[shapeCount]) { shapeCount++; loaded++; }
+    }
+    fclose(fin);
+    return loaded;
+}
+
+void MyEditor::SelectIndex(int idx)   // bonus: row i == pcshape[i]
+{
+    pSelected = (idx >= 0 && idx < shapeCount) ? pcshape[idx] : NULL;
+}
+
+int MyEditor::DeleteIndex(int idx)    // bonus: delete by index
+{
+    if (idx < 0 || idx >= shapeCount) return -1;
+    if (pcshape[idx] == pSelected) pSelected = NULL;
+    delete pcshape[idx];
+    for (int i = idx; i < shapeCount - 1; i++)
+        pcshape[i] = pcshape[i + 1];
+    pcshape[--shapeCount] = NULL;
+    return idx;
 }
 ```
 
@@ -228,12 +292,18 @@ void MyEditor::SaveToFile(const wchar_t* filename)
 #pragma once
 #include <windows.h>
 
+// Observer-style hook: table reports a row index, owner decides the meaning.
+// my_table never knows about shapes or the editor — zero dependencies.
+typedef void (*TableRowCallback)(int rowIndex);
+
 class MyTable
 {
 private:
     HWND hDlg;
     HWND hList;
     int rowCount;
+    TableRowCallback onRowSelect;
+    TableRowCallback onRowDelete;
 
 public:
     MyTable();
@@ -242,14 +312,22 @@ public:
     void Activate(HWND hParent, HINSTANCE hInst);
     void Close();
     void Add(const wchar_t* name, int x1, int y1, int x2, int y2);
+    void Remove(int index);
     void Clear();
     bool IsActive() const { return hDlg != NULL; }
     HWND GetHwnd() const { return hDlg; }
     void SetHwnd(HWND hwnd);
+
+    void SetOnRowSelect(TableRowCallback cb) { onRowSelect = cb; }
+    void SetOnRowDelete(TableRowCallback cb) { onRowDelete = cb; }
+    void NotifyRowSelect(int index) { if (onRowSelect) onRowSelect(index); }
+    void NotifyRowDelete(int index) { if (onRowDelete) onRowDelete(index); }
+    int  GetSelectedRow() const;
 };
 
 #define IDD_TABLE_DIALOG  500
 #define IDC_TABLE_LIST    501
+#define IDC_TABLE_DELETE  502
 
 // my_table.cpp
 void MyTable::Activate(HWND hParent, HINSTANCE hInst)
@@ -269,6 +347,20 @@ void MyTable::Add(const wchar_t* name, int x1, int y1, int x2, int y2)
     rowCount++;
     SendMessageW(hList, LB_SETTOPINDEX, rowCount - 1, 0);  // auto-scroll
 }
+
+// TableDlgProc: row events are forwarded to the owner via callbacks
+case WM_COMMAND:
+    if (LOWORD(wParam) == IDC_TABLE_LIST && HIWORD(wParam) == LBN_SELCHANGE)
+    {
+        g_pTable->NotifyRowSelect(g_pTable->GetSelectedRow());   // row -> highlight
+        return TRUE;
+    }
+    if (LOWORD(wParam) == IDC_TABLE_DELETE)
+    {
+        g_pTable->NotifyRowDelete(g_pTable->GetSelectedRow());   // row -> delete
+        return TRUE;
+    }
+    break;
 ```
 
 ---
@@ -441,11 +533,27 @@ _Рис. 8. Губка видалила лінію (клік по фігурі �
 
 ---
 
+### Завантаження об'єктів з файлу
+
+<img src="../screenshots/load_plus_table.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 9. File → Load: три об'єкти відновлено з `shapes.txt`, таблиця наповнилась; клік по рядку «Line» обвів лінію червоною пунктирною рамкою_
+
+---
+
+### Видалення об'єкта через рядок таблиці
+
+<img src="../screenshots/row_delete.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 10. Кнопка «Delete selected» у діалозі таблиці: обраний рядок «Line» зник, лінія видалена з полотна — синхронізація в обидва боки_
+
+---
+
 ### Таблиця синхронізована після видалення
 
 <img src="../screenshots/table_after_erase.png" style="width: 100%; max-width: 800px;">
 
-_Рис. 9. Рядок «Line» зник із таблиці разом із фігурою (`MyTable::Remove` → `LB_DELETESTRING`)_
+_Рис. 11. Рядок «Line» зник із таблиці разом із фігурою (`MyTable::Remove` → `LB_DELETESTRING`)_
 
 ---
 
@@ -462,6 +570,13 @@ _Рис. 9. Рядок «Line» зник із таблиці разом із ф�
 | **Колір контуру** | меню Tools → Pen color → `ChooseColor` → `pSelected->SetPenColor()` |
 | **Del — видалення обраної фігури** | `WM_KEYDOWN` + `VK_DELETE` → `DeleteSelected()` + синхронізація таблиці |
 | **Очищення полотна** | меню File → Clear canvas → `ClearAll()` (delete всіх об'єктів) + `MyTable::Clear()` |
+| **Завантаження з файлу** | меню File → Load → `LoadFromFile()` парсить рядки `назва\tx1\ty1\tx2\ty2`, `TypeFromName` відновлює тип, `CreateShape` створює об'єкти; таблиця перебудовується через `SyncTableToEditor()` |
+| **Рядок таблиці → підсвітка фігури** | `LBN_SELCHANGE` → `MyTable::NotifyRowSelect` → callback `OnTableRowSelected` → `SelectIndex()` → `InvalidateRect` → червона пунктирна рамка |
+| **Рядок таблиці → вилучення фігури** | кнопка «Delete selected» у діалозі → `NotifyRowDelete` → `DeleteIndex()` видаляє об'єкт → `MyTable::Remove` видаляє рядок |
+
+Зворотній напрямок таблиця→редактор реалізовано через **callback-вказівники**
+(`TableRowCallback`): `my_table` лише повідомляє індекс рядка і не знає нічого
+про фігури чи редактор — модуль залишається повністю незалежним.
 
 Кожна фігура тепер має поля `m_fillColor / m_penColor / m_penStyle / m_hasFill`,
 віртуальні `HitTest()` / `GetBounds()` (перевизначені там, де рамка не дорівнює
@@ -477,6 +592,8 @@ _Рис. 9. Рядок «Line» зник із таблиці разом із ф�
 
 Створено незалежний модуль `my_table` — клас `MyTable` зі своїм файлом ресурсів `.rc`, що не залежить від інших модулів проєкту. Немодальне вікно таблиці створюється через `CreateDialog` і обробляється через `IsDialogMessage` у головному циклі повідомлень — це дозволяє працювати з обома вікнами одночасно.
 
-Додано запис об'єктів у файл у tab-separated форматі: `назва\tx1\ty1\tx2\ty2`. Ім'я типу об'єкта отримується поліморфно через віртуальний метод `GetName()`.
+Додано запис об'єктів у файл у tab-separated форматі: `назва\tx1\ty1\tx2\ty2`. Ім'я типу об'єкта отримується поліморфно через віртуальний метод `GetName()`. Понад специфікацію реалізовано читання того самого формату назад — `LoadFromFile` відновлює множину об'єктів на полотні та перебудовує таблицю.
 
-Лабораторна робота дала практичні навички використання патерну Singleton, створення незалежних модулів, роботи з немодальними діалоговими вікнами, та запису даних у файл.
+Окремо варто відзначити **двосторонню синхронізацію** таблиці й полотна: виділення рядка таблиці обводить відповідну фігуру червоною рамкою, а кнопка «Delete selected» видаляє і рядок, і об'єкт. Зв'язок таблиця→редактор зроблено через callback-вказівники функції (`TableRowCallback`) — модуль `my_table` залишається повністю незалежним і нічого не знає про фігури.
+
+Лабораторна робота дала практичні навички використання патерну Singleton, створення незалежних модулів, роботи з немодальними діалоговими вікнами, запису й читання даних з файлу, а також організації зворотного зв'язку між компонентами через callback-механізм.
