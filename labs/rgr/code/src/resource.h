@@ -31,4 +31,8 @@
 #define IDC_ED_G4       50106
 #define IDC_ED_G5       50107
 
+// --- діалог статистики ---
+#define IDD_STATS       50002
+#define IDC_STATS_TEXT  50201
+
 #define IDC_LIST        60001
