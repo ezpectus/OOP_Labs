@@ -80,6 +80,7 @@
     <ClCompile Include="src\ellipse.cpp" />
     <ClCompile Include="src\my_editor.cpp" />
     <ClCompile Include="src\my_table.cpp" />
+    <ClCompile Include="src\triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\resource.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\my_editor.h" />
     <ClInclude Include="src\my_table.h" />
+    <ClInclude Include="src\triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\Lab5.rc" />
