@@ -14,6 +14,7 @@
 
 static StudentGroup g_group;
 static HWND g_hList = nullptr;
+static wchar_t g_filePath[MAX_PATH] = L"";
 
 // ---------- ListView ----------
 
@@ -78,6 +79,63 @@ static int SelectedRow()
 }
 
 // ---------- дії ----------
+
+static void UpdateTitle(HWND hWnd)
+{
+    wchar_t title[MAX_PATH + 64];
+    if (g_filePath[0])
+        swprintf_s(title, L"Група студентів — %s", g_filePath);
+    else
+        swprintf_s(title, L"Група студентів — новий список");
+    SetWindowTextW(hWnd, title);
+}
+
+static bool AskSavePath(HWND hWnd)
+{
+    wchar_t path[MAX_PATH] = L"group.csv";
+    OPENFILENAMEW ofn = {};
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = hWnd;
+    ofn.lpstrFile = path;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrFilter = L"CSV файли (*.csv)\0*.csv\0Усі файли (*.*)\0*.*\0";
+    ofn.Flags = OFN_OVERWRITEPROMPT;
+    if (!GetSaveFileNameW(&ofn)) return false;
+    wcscpy_s(g_filePath, path);
+    return true;
+}
+
+static void DoSave(HWND hWnd, bool saveAs)
+{
+    if (saveAs || !g_filePath[0])
+        if (!AskSavePath(hWnd)) return;
+    if (g_group.saveToFile(g_filePath))
+        UpdateTitle(hWnd);
+    else
+        MessageBoxW(hWnd, L"Не вдалося зберегти файл!", L"Помилка", MB_ICONERROR);
+}
+
+static void DoOpen(HWND hWnd)
+{
+    wchar_t path[MAX_PATH] = L"";
+    OPENFILENAMEW ofn = {};
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = hWnd;
+    ofn.lpstrFile = path;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrFilter = L"CSV файли (*.csv)\0*.csv\0Усі файли (*.*)\0*.*\0";
+    ofn.Flags = OFN_FILEMUSTEXIST;
+    if (!GetOpenFileNameW(&ofn)) return;
+
+    if (g_group.loadFromFile(path))
+    {
+        wcscpy_s(g_filePath, path);
+        RefreshList();
+        UpdateTitle(hWnd);
+    }
+    else
+        MessageBoxW(hWnd, L"Не вдалося відкрити файл!", L"Помилка", MB_ICONERROR);
+}
 
 static void DoAdd(HWND hWnd)
 {
@@ -148,6 +206,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         InitListView(g_hList);
         SeedDemo();
         RefreshList();
+        UpdateTitle(hWnd);
         return 0;
 
     case WM_SIZE:
@@ -161,6 +220,15 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_COMMAND:
         switch (LOWORD(wp))
         {
+        case IDM_FILE_NEW:
+            g_group.clear();
+            g_filePath[0] = 0;
+            RefreshList();
+            UpdateTitle(hWnd);
+            return 0;
+        case IDM_FILE_OPEN:   DoOpen(hWnd);            return 0;
+        case IDM_FILE_SAVE:   DoSave(hWnd, false);     return 0;
+        case IDM_FILE_SAVEAS: DoSave(hWnd, true);      return 0;
         case IDM_FILE_EXIT:   DestroyWindow(hWnd);     return 0;
         case IDM_ST_ADD:      DoAdd(hWnd);             return 0;
         case IDM_ST_EDIT:     DoEdit(hWnd);            return 0;
