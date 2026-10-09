@@ -1,6 +1,7 @@
 // dialogs.cpp — реалізація діалогів (РГР)
 #include "dialogs.h"
 #include "resource.h"
+#include <sstream>
 
 // ---- контекст діалогу Add/Edit ----
 struct EditCtx
@@ -52,6 +53,7 @@ static INT_PTR CALLBACK StudentDlgProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp
             s.setBookNo(buf);
             for (int i = 0; i < Student::GRADE_COUNT; i++)
                 s.setGrade(i, GetGradeField(hDlg, IDC_ED_G1 + i));
+
             *ctx->result = s;
             ctx->ok = TRUE;
             EndDialog(hDlg, IDOK);
@@ -77,4 +79,40 @@ BOOL StudentEditDialog(HWND hOwner, const wchar_t* title, Student& out)
     DialogBoxParamW(GetModuleHandleW(nullptr), MAKEINTRESOURCEW(IDD_STUDENT),
                     hOwner, StudentDlgProc, reinterpret_cast<LPARAM>(&ctx));
     return ctx.ok;
+}
+
+// ---- статистика: текст формується тут, показ у діалозі ----
+static std::wstring g_statsText;
+
+static INT_PTR CALLBACK StatsDlgProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch (msg)
+    {
+    case WM_INITDIALOG:
+        SetDlgItemTextW(hDlg, IDC_STATS_TEXT, g_statsText.c_str());
+        return TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wp) == IDOK || LOWORD(wp) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wp));
+            return TRUE;
+        }
+        break;
+    }
+    return FALSE;
+}
+
+void StatsDialog(HWND hOwner, const StudentGroup& group)
+{
+    std::wstringstream ss;
+    ss.setf(std::ios::fixed); ss.precision(2);
+    ss << L"Студентів у групі:  " << group.size() << L"\r\n";
+    ss << L"Середній бал групи:  " << group.groupAvg() << L"\r\n";
+    ss << L"Успішність:  " << group.successRate() << L" %\r\n";
+    ss << L"Відмінників (усі >= 90):  " << group.excellentCount() << L"\r\n";
+    ss << L"Боржників (є < 60):  " << group.debtorCount();
+    g_statsText = ss.str();
+
+    DialogBoxParamW(GetModuleHandleW(nullptr), MAKEINTRESOURCEW(IDD_STATS),
+                    hOwner, StatsDlgProc, 0);
 }

@@ -241,6 +241,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             g_group.sortByName();
             RefreshList();
             return 0;
+        case IDM_STATS_SHOW:  StatsDialog(hWnd, g_group); return 0;
         }
         break;
 
