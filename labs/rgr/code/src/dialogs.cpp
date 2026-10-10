@@ -54,6 +54,11 @@ static INT_PTR CALLBACK StudentDlgProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp
             for (int i = 0; i < Student::GRADE_COUNT; i++)
                 s.setGrade(i, GetGradeField(hDlg, IDC_ED_G1 + i));
 
+            if (s.getName().empty())
+            {
+                MessageBoxW(hDlg, L"Введіть ПІБ студента!", L"Помилка", MB_ICONWARNING);
+                return TRUE;
+            }
             *ctx->result = s;
             ctx->ok = TRUE;
             EndDialog(hDlg, IDOK);
