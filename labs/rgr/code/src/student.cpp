@@ -22,6 +22,8 @@ int Student::getGrade(int i) const
 void Student::setGrade(int i, int v)
 {
     if (i < 0 || i >= GRADE_COUNT) return;
+    if (v < 0) v = 0;
+    if (v > 100) v = 100;
     grades[i] = v;
 }
 
