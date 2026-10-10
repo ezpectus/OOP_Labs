@@ -14,6 +14,7 @@ private:
     int currentType;
     bool isDrawing;
     Shape* pTempShape;
+    Shape* pSelected;   // shape picked by the Select tool (fill target)
 
     MyEditor();
     MyEditor(const MyEditor&) = delete;
@@ -35,5 +36,6 @@ public:
     int  GetCount() const { return shapeCount; }
     Shape* GetShape(int i) const { return (i >= 0 && i < shapeCount) ? pcshape[i] : NULL; }
 
+    void PickFillColor(HWND hWnd);
     void SaveToFile(const wchar_t* filename);
 };

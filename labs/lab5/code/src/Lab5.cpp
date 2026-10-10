@@ -42,6 +42,8 @@ static void UpdateTitle(HWND hWnd, int type)
         swprintf(buf, 128, L"%s — [%s]", szTitleBase, ShapeNames[idx]);
     else if (type == IDM_ERASER)
         swprintf(buf, 128, L"%s — [Eraser]", szTitleBase);
+    else if (type == IDM_SELECT)
+        swprintf(buf, 128, L"%s — [Select]", szTitleBase);
     else
         swprintf(buf, 128, L"%s", szTitleBase);
     SetWindowText(hWnd, buf);
@@ -69,7 +71,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         SendMessage(hToolBar, TB_ADDBITMAP, 0, (LPARAM)&tbab);
 
         const int stdBtns[7] = { 6, 3, 4, 5, 8, 7, 9 };
-        TBBUTTON tbb[8];
+        TBBUTTON tbb[9];
         ZeroMemory(tbb, sizeof(tbb));
         for (int i = 0; i < 7; i++)
         {
@@ -78,12 +80,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             tbb[i].fsState = TBSTATE_ENABLED;
             tbb[i].fsStyle = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
         }
-        // 8th button: eraser tool (STD_CUT = scissors icon)
-        tbb[7].iBitmap   = 0;
-        tbb[7].idCommand = IDM_ERASER;
+        // 8th button: select tool (STD_FIND = magnifier icon)
+        tbb[7].iBitmap   = 13;
+        tbb[7].idCommand = IDM_SELECT;
         tbb[7].fsState   = TBSTATE_ENABLED;
         tbb[7].fsStyle   = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
-        SendMessage(hToolBar, TB_ADDBUTTONS, 8, (LPARAM)tbb);
+        // 9th button: eraser tool (STD_CUT = scissors icon)
+        tbb[8].iBitmap   = 0;
+        tbb[8].idCommand = IDM_ERASER;
+        tbb[8].fsState   = TBSTATE_ENABLED;
+        tbb[8].fsStyle   = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
+        SendMessage(hToolBar, TB_ADDBUTTONS, 9, (LPARAM)tbb);
 
         MyEditor::getInstance()->SelectShape(IDM_POINT);
         UpdateTitle(hWnd, IDM_POINT);
@@ -102,9 +109,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_LINECIRC:
         case IDM_CUBE:
         case IDM_TRIANGLE:
+        case IDM_SELECT:
         case IDM_ERASER:
             MyEditor::getInstance()->SelectShape(wmId);
             UpdateTitle(hWnd, wmId);
+            break;
+        case IDM_FILLCOLOR:
+            MyEditor::getInstance()->PickFillColor(hWnd);
+            InvalidateRect(hWnd, NULL, FALSE);
             break;
         case IDM_VIEW_TABLE:
             table.Activate(hWnd, g_hInst);
@@ -138,6 +150,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 pttt->lpszText = (LPTSTR)ShapeNames[idx];
             else if (pnmh->idFrom == IDM_ERASER)
                 pttt->lpszText = (LPTSTR)_T("Eraser");
+            else if (pnmh->idFrom == IDM_SELECT)
+                pttt->lpszText = (LPTSTR)_T("Select");
             return 0;
         }
         return DefWindowProc(hWnd, message, wParam, lParam);

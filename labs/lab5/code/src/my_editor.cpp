@@ -9,10 +9,11 @@
 #include "triangle.h"
 #include "resource.h"
 #include <stdio.h>
+#include <commdlg.h>
 
 MyEditor* MyEditor::p_instance = nullptr;
 
-MyEditor::MyEditor() : shapeCount(0), currentType(IDM_POINT), isDrawing(false), pTempShape(NULL)
+MyEditor::MyEditor() : shapeCount(0), currentType(IDM_POINT), isDrawing(false), pTempShape(NULL), pSelected(NULL)
 {
     for (int i = 0; i < N; i++) pcshape[i] = NULL;
 }
@@ -61,12 +62,19 @@ int MyEditor::OnMouseDown(int x, int y)
         int idx = HitTestIndex(x, y);
         if (idx >= 0)
         {
+            if (pcshape[idx] == pSelected) pSelected = NULL;
             delete pcshape[idx];
             for (int i = idx; i < shapeCount - 1; i++)
                 pcshape[i] = pcshape[i + 1];
             pcshape[--shapeCount] = NULL;
         }
         return idx;   // erased index or -1 (caller syncs the table)
+    }
+    if (currentType == IDM_SELECT)
+    {
+        int idx = HitTestIndex(x, y);
+        pSelected = (idx >= 0) ? pcshape[idx] : NULL;
+        return -1;
     }
     isDrawing = true;
     pTempShape = CreateShape(currentType, x, y, x, y);
@@ -121,6 +129,41 @@ void MyEditor::OnPaint(HDC hdc)
         SetROP2(hdc, oldROP);
         DeleteObject(hPen);
     }
+
+    // red dashed frame around the selected shape (Select tool)
+    if (pSelected)
+    {
+        RECT r = pSelected->GetBounds();
+        InflateRect(&r, 4, 4);
+        HPEN hPen = CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+        HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+        HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH));
+        Rectangle(hdc, r.left, r.top, r.right, r.bottom);
+        SelectObject(hdc, hOldBrush);
+        SelectObject(hdc, hOldPen);
+        DeleteObject(hPen);
+    }
+}
+
+void MyEditor::PickFillColor(HWND hWnd)
+{
+    if (!pSelected)
+    {
+        MessageBox(hWnd,
+            _T("Select an object with the Select tool first"),
+            _T("Fill color"), MB_OK | MB_ICONINFORMATION);
+        return;
+    }
+    static COLORREF custom[16] = { 0 };
+    CHOOSECOLOR cc;
+    ZeroMemory(&cc, sizeof(cc));
+    cc.lStructSize = sizeof(cc);
+    cc.hwndOwner   = hWnd;
+    cc.lpCustColors = custom;
+    cc.rgbResult   = pSelected->GetFillColor();
+    cc.Flags       = CC_FULLOPEN | CC_RGBINIT;
+    if (ChooseColor(&cc))
+        pSelected->SetFillColor(cc.rgbResult);
 }
 
 void MyEditor::SaveToFile(const wchar_t* filename)
@@ -130,13 +173,7 @@ void MyEditor::SaveToFile(const wchar_t* filename)
 
     for (int i = 0; i < shapeCount; i++)
     {
-        const wchar_t* name = L"Unknown";
-        if (dynamic_cast<PointShape*>(pcshape[i])) name = L"Point";
-        else if (dynamic_cast<LineShape*>(pcshape[i])) name = L"Line";
-        else if (dynamic_cast<RectShape*>(pcshape[i])) name = L"Rect";
-        else if (dynamic_cast<EllipseShape*>(pcshape[i])) name = L"Ellipse";
-        else if (dynamic_cast<LineWithCircles*>(pcshape[i])) name = L"LineCirc";
-        else if (dynamic_cast<CubeWireframe*>(pcshape[i])) name = L"Cube";
+        const wchar_t* name = pcshape[i]->GetName();
 
         int x1, y1, x2, y2;
         pcshape[i]->GetCoords(x1, y1, x2, y2);

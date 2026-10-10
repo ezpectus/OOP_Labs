@@ -19,7 +19,12 @@ BEGIN
         MENUITEM "&Cube Wireframe", IDM_CUBE
         MENUITEM "&Triangle",       IDM_TRIANGLE
         MENUITEM SEPARATOR
+        MENUITEM "&Select",         IDM_SELECT
         MENUITEM "&Eraser",         IDM_ERASER
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Fill color...",  IDM_FILLCOLOR
     END
     POPUP "&View"
     BEGIN
