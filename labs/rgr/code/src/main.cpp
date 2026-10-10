@@ -242,6 +242,13 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             RefreshList();
             return 0;
         case IDM_STATS_SHOW:  StatsDialog(hWnd, g_group); return 0;
+        case IDM_ABOUT:
+            MessageBoxW(hWnd,
+                L"РГР, варіант 13 (Ж = 13)\n"
+                L"Список студентів групи з розрахунками успішності.\n"
+                L"Win32 + ListView, класи Student/StudentGroup, CSV-файл.",
+                L"Про програму", MB_OK | MB_ICONINFORMATION);
+            return 0;
         }
         break;
 
