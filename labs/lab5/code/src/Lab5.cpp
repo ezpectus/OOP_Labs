@@ -2,6 +2,11 @@
 // Lab 5: Multi-window UI, Singleton, table, file save
 // Stepanenko Denys, IM-051, 2026
 // Variant: J=13 (odd) — Meyers Singleton
+//
+// Build & run:  build-lab.bat 5 run        (from repo root, MinGW)
+//           or  labs\lab5\code\Lab5.sln    (Visual Studio)
+// Modules:      Lab5.cpp (window+menus) / my_editor (Singleton + shapes)
+//               / my_table (modeless dialog, row callbacks) / res\Lab5.rc
 
 #include <windows.h>
 #include <commctrl.h>

@@ -1,6 +1,10 @@
 ﻿// Lab6.cpp — Manager program (J=13, variant 1)
 // Launches Object2/Object3, positions windows, sends params via WM_COPYDATA.
 // Stepanenko Denys, IM-051, 2026
+//
+// Build:  build-lab.bat 6 Lab6     (from repo root; also build Object2/Object3)
+// Run:    code\src\Lab6\Lab6.exe — enter n/Min/Max, press "Run system";
+//         it starts Object2 + Object3 itself, no manual launch needed.
 
 #include <windows.h>
 #include <tchar.h>

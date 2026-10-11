@@ -2,6 +2,9 @@
 // Receives Lab6Params via WM_COPYDATA, generates n×n int matrix in [Min..Max],
 // shows it in the window, writes CF_TEXT to Clipboard, notifies Object3.
 // Stepanenko Denys, IM-051, 2026
+//
+// Build:  build-lab.bat 6 Object2
+// Run:    automatic — Lab6.exe (manager) starts this process via WinExec.
 
 #include <windows.h>
 #include <tchar.h>

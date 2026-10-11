@@ -2,6 +2,9 @@
 // On WM_USER+100 reads an n×n matrix from Clipboard (first line = n, then
 // n tab-separated rows), computes det(A) by Gaussian elimination, shows it.
 // Stepanenko Denys, IM-051, 2026
+//
+// Build:  build-lab.bat 6 Object3
+// Run:    automatic — Lab6.exe (manager) starts this process via WinExec.
 
 #include <windows.h>
 #include <tchar.h>
