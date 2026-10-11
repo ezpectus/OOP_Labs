@@ -3,6 +3,22 @@
 // Програма списку студентів групи з розрахунками успішності.
 // Головне вікно: ListView (таблиця) + меню Файл/Студент/
 // Сортування/Статистика. Діалоги Add/Edit — окремий модуль.
+//
+// Build & run (MinGW, з папки code\src):
+//   g++ -c -std=c++14 -DUNICODE -D_UNICODE *.cpp
+//   windres -c 65001 --output-format=coff -I . -i ..\res\RGR.rc -o RGR.res.o
+//   g++ -mwindows -municode *.o -o RGR.exe -lcomctl32
+//   .\RGR.exe
+// (точні команди — у labs\rgr\README.md)
+//
+// Архітектура (модель ↔ UI):
+//   student.h/.cpp        — модель: дані студента + розрахунки,
+//                           жодного Win32 — чисте ООП
+//   student_group.h/.cpp  — контейнер vector<Student>: сортування,
+//                           статистика, save/load CSV
+//   dialogs.h/.cpp        — модальні діалоги (DialogBoxParam+EditCtx)
+//   main.cpp              — UI-шар: вікно, ListView, меню, WndProc.
+//                           Працює тільки через публічні методи групи.
 // ============================================================
 #include <windows.h>
 #include <commctrl.h>
