@@ -1,47 +1,56 @@
-====================================================
-  ЗАПУСК — ОДНА КОМАНДА НА ЛАБУ
-  (из корня репозитория F:\VSC projects\OOP_Labs)
-====================================================
+============================================================
+  ЗАПУСК ПРОГРАМ — копировать строку, вставить в cmd, Enter
+  (cmd открыть В КОРНЕ репо: F:\VSC projects\OOP_Labs)
+============================================================
 
+--- ЛАБА 5 (Singleton + многооконный редактор) ----------------
+build-lab.bat 5 run
+
+--- ЛАБА 6 (3 окна: менеджер + матрица + детерминант) ----------
+build-lab.bat 6 run
+:: собирает Lab6 + Object2 + Object3 и запускает менеджер.
+:: В менеджере: ввести n, Min, Max -> кнопка "Run system".
+
+--- РГР (список студентов, вариант 13) ------------------------
+build-lab.bat rgr run
+
+--- ЛАБЫ 1-4 (если спросит) -----------------------------------
 build-lab.bat 1 run
 build-lab.bat 2 run
 build-lab.bat 3 run
 build-lab.bat 4 run
-build-lab.bat 5 run
-build-lab.bat 6 run
-build-lab.bat rgr run
 
-====================================================
-  Пояснения
-====================================================
-
-lab1-5   — собирает и сразу запускает LabN.exe
-lab6     — собирает ВСЕ ТРИ программы (Lab6, Object2, Object3)
-           и запускает менеджер Lab6.exe;
-           в окне: ввести n, Min, Max -> кнопка "Run system"
-rgr      — собирает и запускает RGR.exe
-           (список студентов, вариант 13)
-
-====================================================
-  Если просто запустить без пересборки — готовые exe:
-====================================================
-
-labs\lab1\code\src\Lab1.exe
-labs\lab2\code\src\Lab2.exe
-labs\lab3\code\src\Lab3.exe
-labs\lab4\code\src\Lab4.exe
+============================================================
+  ЗАПАСНОЙ ВАРИАНТ — exe уже собраны, запуск двойным кликом:
+============================================================
 labs\lab5\code\src\Lab5.exe
-labs\lab6\code\src\Lab6\Lab6.exe
+labs\lab6\code\src\Lab6\Lab6.exe        (менеджер, стартует 2 окна сам)
 labs\rgr\code\src\RGR.exe
 
-====================================================
-  Отчёты (PDF):
-====================================================
-
-labs\lab1\report\report.pdf
-labs\lab2\report\report.pdf
-labs\lab3\report\report.pdf
-labs\lab4\report\report.pdf
+============================================================
+  ЗВІТИ (pdf, показать преподу):
+============================================================
 labs\lab5\report\report.pdf
 labs\lab6\report\report.pdf
 labs\rgr\report\report.pdf
+
+============================================================
+  ЧТО ПОКАЗЫВАТЬ В КОДЕ (если спросит):
+============================================================
+Lab5: labs\lab5\code\src\Lab5.cpp
+      - Meyers singleton (getInstance, static внутри)
+      - Shape база + HitTest/GetBounds, select/fill/eraser
+      - modeless таблица, TableRowCallback, save/load файла
+Lab6: labs\lab6\code\src\Lab6\Lab6.cpp   - менеджер (WinExec, WM_COPYDATA)
+      labs\lab6\code\src\Object2\Object2.cpp - матрица + Clipboard
+      labs\lab6\code\src\Object3\Object3.cpp - детерминант Гаусса
+RGR:  labs\rgr\code\src\
+      student.h/.cpp        - класс Student (avg, hasDebt, isExcellent, CSV)
+      student_group.h/.cpp  - контейнер vector<Student>, статистика, файл
+      main.cpp              - окно + ListView + меню
+      dialogs.cpp           - модальные диалоги Add/Edit/Stats
+
+============================================================
+  ЕСЛИ БИЛД РУГАЕТСЯ: MinGW g++ должен быть в PATH
+  (проверка: g++ --version)
+============================================================

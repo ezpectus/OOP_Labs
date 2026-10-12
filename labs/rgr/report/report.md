@@ -152,7 +152,7 @@ BOM — читається Excel і Блокнотом. Помилки чита�
 
 ```
 cd labs\rgr\code\src
-g++ -c -std=c++14 -DUNICODE -D_UNICODE student.cpp student_group.cpp dialogs.cpp main.cpp
+g++ -c -std=c++17 -DUNICODE -D_UNICODE student.cpp student_group.cpp dialogs.cpp main.cpp
 windres -c 65001 --output-format=coff -I . -i ..\res\RGR.rc -o RGR.res.o
 g++ -mwindows -municode *.o -o RGR.exe -lcomctl32
 .\RGR.exe

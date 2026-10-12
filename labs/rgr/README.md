@@ -1,4 +1,4 @@
-# РГР — Варіант 13 (Ж = 13)
+﻿# РГР — Варіант 13 (Ж = 13)
 
 **Список студентів групи з розрахунками успішності.**
 
@@ -31,7 +31,7 @@ report/report.md               — звіт
 
 ```bat
 cd code\src
-g++ -c -std=c++14 -DUNICODE -D_UNICODE student.cpp student_group.cpp dialogs.cpp main.cpp
+g++ -c -std=c++17 -DUNICODE -D_UNICODE student.cpp student_group.cpp dialogs.cpp main.cpp
 windres -c 65001 --output-format=coff -I . -i ..\res\RGR.rc -o RGR.res.o
 g++ -mwindows -municode *.o RGR.res.o -o RGR.exe -lcomctl32
 ```
