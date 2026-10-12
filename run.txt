@@ -1,62 +1,41 @@
 ====================================================
-  ЗАПУСК ЛАБОРАТОРНЫХ — команды для копипасты
-  Репозиторий: F:\VSC projects\OOP_Labs
+  ЗАПУСК — ОДНА КОМАНДА НА ЛАБУ
+  (из корня репозитория F:\VSC projects\OOP_Labs)
 ====================================================
 
-=== БЫСТРО (exe уже собраны, просто запустить) ===
+build-lab.bat 1 run
+build-lab.bat 2 run
+build-lab.bat 3 run
+build-lab.bat 4 run
+build-lab.bat 5 run
+build-lab.bat 6 run
+build-lab.bat rgr run
 
+====================================================
+  Пояснения
+====================================================
+
+lab1-5   — собирает и сразу запускает LabN.exe
+lab6     — собирает ВСЕ ТРИ программы (Lab6, Object2, Object3)
+           и запускает менеджер Lab6.exe;
+           в окне: ввести n, Min, Max -> кнопка "Run system"
+rgr      — собирает и запускает RGR.exe
+           (список студентов, вариант 13)
+
+====================================================
+  Если просто запустить без пересборки — готовые exe:
+====================================================
+
+labs\lab1\code\src\Lab1.exe
+labs\lab2\code\src\Lab2.exe
+labs\lab3\code\src\Lab3.exe
+labs\lab4\code\src\Lab4.exe
 labs\lab5\code\src\Lab5.exe
 labs\lab6\code\src\Lab6\Lab6.exe
 labs\rgr\code\src\RGR.exe
 
 ====================================================
-=== LAB 5 — редактор фигур (таблица, Singleton) ===
-====================================================
-
-Из корня репозитория:
-
-    build-lab.bat 5 run
-
-или Visual Studio: labs\lab5\code\Lab5.sln
-
-====================================================
-=== LAB 6 — менеджер + Object2 + Object3 ===
-====================================================
-
-Из корня репозитория (сборка трёх программ):
-
-    build-lab.bat 6 Lab6
-    build-lab.bat 6 Object2
-    build-lab.bat 6 Object3
-
-Запуск — только менеджер, детей стартует сам:
-
-    labs\lab6\code\src\Lab6\Lab6.exe
-
-В окне: ввести n, Min, Max -> кнопка "Run system".
-
-====================================================
-=== RGR — список студентов (вариант 13) ===
-====================================================
-
-cd /d F:\VSC projects\OOP_Labs\labs\rgr\code\src
-
-    g++ -c -std=c++14 -DUNICODE -D_UNICODE student.cpp student_group.cpp dialogs.cpp main.cpp
-    windres -c 65001 --output-format=coff -I . -i ..\res\RGR.rc -o RGR.res.o
-    g++ -mwindows -municode *.o -o RGR.exe -lcomctl32
-    RGR.exe
-
-====================================================
-=== LAB 1-4 (на всякий случай) ===
-====================================================
-
-    build-lab.bat 1 run
-    build-lab.bat 2 run
-    build-lab.bat 3 run
-    build-lab.bat 4 run
-
-====================================================
-=== Отчёты (PDF) ===
+  Отчёты (PDF):
 ====================================================
 
 labs\lab1\report\report.pdf

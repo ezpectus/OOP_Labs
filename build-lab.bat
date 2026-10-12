@@ -17,7 +17,17 @@ set SUB=
 if /i "%2"=="run" (set RUN=1) else (set SUB=%2)
 if /i "%3"=="run" set RUN=1
 
+rem lab6 without subfolder = build all three programs, run = launch manager
+if /i "%1"=="6" if "%SUB%"=="" (
+  call "%~f0" 6 Lab6    || exit /b 1
+  call "%~f0" 6 Object2 || exit /b 1
+  call "%~f0" 6 Object3 || exit /b 1
+  if "%RUN%"=="1" start "" "%~dp0labs\lab6\code\src\Lab6\Lab6.exe"
+  exit /b 0
+)
+
 set SRCDIR=labs\lab%1\code\src
+if /i "%1"=="rgr" set SRCDIR=labs\rgr\code\src
 if not "%SUB%"=="" set SRCDIR=%SRCDIR%\%SUB%
 
 if not exist "%~dp0%SRCDIR%" (
@@ -37,12 +47,15 @@ if "%SUB%" neq "" for %%f in (*.rc) do (
   windres -c 65001 --output-format=coff -I . -i "%%f" -o "%%~nf.res.o" || exit /b 1
 )
 
+set STD=-std=c++26
+if /i "%1"=="rgr" set STD=-std=c++17
 for %%f in (*.cpp) do (
   echo   g++ %%~nxf
-  g++ -std=c++26 -DUNICODE -D_UNICODE -municode -O2 -c "%%f" -o "%%~nf.o" || exit /b 1
+  g++ %STD% -DUNICODE -D_UNICODE -municode -O2 -c "%%f" -o "%%~nf.o" || exit /b 1
 )
 
 set EXE=Lab%1
+if /i "%1"=="rgr" set EXE=RGR
 if not "%SUB%"=="" set EXE=%SUB%
 rem close running instance so the link step can overwrite the exe
 taskkill /f /im %EXE%.exe >nul 2>&1
