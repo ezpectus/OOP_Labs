@@ -1,0 +1,119 @@
+// my_table.cpp — independent table module implementation
+// No includes from project (only windows.h via my_table.h)
+#include "my_table.h"
+#include <stdio.h>
+#include <wchar.h>
+
+static MyTable* g_pTable = nullptr;
+static INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+
+MyTable::MyTable() : hDlg(NULL), hList(NULL), rowCount(0),
+                     onRowSelect(NULL), onRowDelete(NULL) {}
+
+MyTable::~MyTable() { Close(); }
+
+void MyTable::SetHwnd(HWND hwnd)
+{
+    hDlg = hwnd;
+    hList = GetDlgItem(hwnd, IDC_TABLE_LIST);
+}
+
+void MyTable::Activate(HWND hParent, HINSTANCE hInst)
+{
+    if (hDlg) { Close(); return; }
+    g_pTable = this;
+    hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_TABLE_DIALOG),
+                        hParent, TableDlgProc);
+}
+
+void MyTable::Close()
+{
+    if (hDlg)
+    {
+        DestroyWindow(hDlg);
+        hDlg = NULL;
+        hList = NULL;
+    }
+}
+
+void MyTable::Add(const wchar_t* name, int x1, int y1, int x2, int y2)
+{
+    if (!hList) return;
+    wchar_t buf[256];
+    swprintf(buf, 256, L"%s\t%d\t%d\t%d\t%d", name, x1, y1, x2, y2);
+    SendMessageW(hList, LB_ADDSTRING, 0, (LPARAM)buf);
+    rowCount++;
+    // Auto-scroll to bottom
+    SendMessageW(hList, LB_SETTOPINDEX, rowCount - 1, 0);
+}
+
+void MyTable::Remove(int index)
+{
+    if (!hList) return;
+    if (index < 0 || index >= rowCount) return;
+    SendMessageW(hList, LB_DELETESTRING, index, 0);
+    rowCount--;
+}
+
+void MyTable::Clear()
+{
+    if (hList)
+    {
+        SendMessageW(hList, LB_RESETCONTENT, 0, 0);
+        rowCount = 0;
+    }
+}
+
+int MyTable::GetSelectedRow() const
+{
+    if (!hList) return -1;
+    int i = (int)SendMessageW(hList, LB_GETCURSEL, 0, 0);
+    return (i == LB_ERR) ? -1 : i;
+}
+
+// Dialog procedure — static, internal to this module
+INT_PTR CALLBACK TableDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        if (g_pTable)
+        {
+            g_pTable->SetHwnd(hDlg);
+            // column stops so tab-separated rows align: name, x1, y1, x2, y2
+            int tabs[4] = { 70, 120, 160, 200 };
+            SendMessageW(GetDlgItem(hDlg, IDC_TABLE_LIST),
+                         LB_SETTABSTOPS, 4, (LPARAM)tabs);
+        }
+        return TRUE;
+
+    case WM_SYSCOMMAND:
+        if (wParam == SC_CLOSE) { DestroyWindow(hDlg); return TRUE; }
+        break;
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL) { DestroyWindow(hDlg); return TRUE; }
+        // row click -> owner gets the index through the callback
+        if (LOWORD(wParam) == IDC_TABLE_LIST && HIWORD(wParam) == LBN_SELCHANGE
+            && g_pTable)
+        {
+            g_pTable->NotifyRowSelect(g_pTable->GetSelectedRow());
+            return TRUE;
+        }
+        // "Delete selected" button -> owner deletes, table just reports
+        if (LOWORD(wParam) == IDC_TABLE_DELETE && g_pTable)
+        {
+            g_pTable->NotifyRowDelete(g_pTable->GetSelectedRow());
+            return TRUE;
+        }
+        break;
+
+    case WM_DESTROY:
+        if (g_pTable) g_pTable->SetHwnd(NULL);
+        break;
+
+    default:
+        return FALSE;
+    }
+    return FALSE;
+}
