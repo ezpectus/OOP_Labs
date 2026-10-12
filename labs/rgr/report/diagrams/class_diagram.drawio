@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="RGR class diagram">
+    <mxGraphModel dx="800" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="student" value="Student" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="260" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="sf" value="- name : wstring&#10;- bookNo : wstring&#10;- grades : int[5]" style="text;align=left;verticalAlign=top;spacingLeft=6;spacingTop=2" vertex="1" parent="student">
+          <mxGeometry y="26" width="260" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="sm" value="+ avg() : double&#10;+ hasDebt() : bool&#10;+ isExcellent() : bool&#10;+ toCSV() : wstring&#10;+ fromCSV(line) : bool&#10;+ getters / setters" style="text;align=left;verticalAlign=top;spacingLeft=6;spacingTop=2" vertex="1" parent="student">
+          <mxGeometry y="96" width="260" height="134" as="geometry"/>
+        </mxCell>
+        <mxCell id="group" value="StudentGroup" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0" vertex="1" parent="1">
+          <mxGeometry x="480" y="60" width="300" height="290" as="geometry"/>
+        </mxCell>
+        <mxCell id="gf" value="- students : vector&lt;Student&gt;" style="text;align=left;verticalAlign=top;spacingLeft=6;spacingTop=2" vertex="1" parent="group">
+          <mxGeometry y="26" width="300" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="gm" value="+ add(s)&#10;+ removeAt(i) / updateAt(i, s)&#10;+ sortByAvg(asc) / sortByName()&#10;+ groupAvg() : double&#10;+ successRate() : double&#10;+ excellentCount() / debtorCount()&#10;+ saveToFile() / loadFromFile()" style="text;align=left;verticalAlign=top;spacingLeft=6;spacingTop=2" vertex="1" parent="group">
+          <mxGeometry y="56" width="300" height="234" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui" value="«UI» main.cpp + dialogs.cpp&#10;wWinMain, WndProc, RefreshList,&#10;StudentEditDialog, StatsDialog" style="rounded=0;dashed=1;align=center;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="480" y="420" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;startArrow=diamondThin;startFill=0;endArrow=open;endFill=0;exitX=0;exitY=0.5;entryX=1;entryY=0.5" edge="1" parent="1" source="group" target="student">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1l" value="contains 1..*" style="edgeLabel" vertex="1" parent="e1" connectable="0">
+          <mxGeometry x="-0.1" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;dashed=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1" edge="1" parent="1" source="ui" target="group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2l" value="uses public API only" style="edgeLabel" vertex="1" parent="e2" connectable="0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

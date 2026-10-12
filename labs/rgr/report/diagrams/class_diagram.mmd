@@ -1,0 +1,50 @@
+classDiagram
+    class Student {
+        -wstring name
+        -wstring bookNo
+        -int grades[5]
+        +avg() double
+        +hasDebt() bool
+        +isExcellent() bool
+        +toCSV() wstring
+        +fromCSV(line) bool
+        +getName() / setName()
+        +getBookNo() / setBookNo()
+        +getGrade(i) / setGrade(i, v)
+    }
+
+    class StudentGroup {
+        -vector~Student~ students
+        +add(s)
+        +removeAt(i) bool
+        +updateAt(i, s) bool
+        +size() size_t
+        +at(i) Student*
+        +sortByAvg(asc)
+        +sortByName()
+        +groupAvg() double
+        +successRate() double
+        +excellentCount() int
+        +debtorCount() int
+        +saveToFile(path) bool
+        +loadFromFile(path) bool
+    }
+
+    class UILayer {
+        <<UI, Win32>>
+        +wWinMain()
+        +WndProc()
+        +RefreshList()
+        +SeedDemo()
+    }
+
+    class Dialogs {
+        <<UI, Win32>>
+        +StudentEditDialog() BOOL
+        +StatsDialog()
+    }
+
+    StudentGroup o-- "1..*" Student : contains
+    UILayer --> StudentGroup : uses (public API only)
+    UILayer --> Dialogs : opens (DialogBoxParam)
+    Dialogs --> Student : reads/writes via EditCtx

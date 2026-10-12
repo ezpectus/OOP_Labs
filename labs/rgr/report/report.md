@@ -1027,32 +1027,14 @@ res/RGR.rc         ── resource.h
 
 ## 5. Діаграма класів
 
-```
-+-----------------------------+       +-----------------------------+
-|           Student           |       |         StudentGroup        |
-+-----------------------------+       +-----------------------------+
-| - name : wstring            |       | - students : vector<Student>|
-| - bookNo : wstring          |       +-----------------------------+
-| - grades : int[5]           |       | + add(s)                    |
-+-----------------------------+       | + removeAt(i) / updateAt(i) |
-| + avg() : double            |       | + sortByAvg() / sortByName()|
-| + hasDebt() : bool          | 1   * | + groupAvg() : double       |
-| + isExcellent() : bool      |-------| + successRate() : double    |
-| + toCSV() / fromCSV()       | містить| + excellentCount()          |
-| + getName() / setGrade()... |       | + debtorCount()             |
-+-----------------------------+       | + saveToFile/loadFromFile() |
-                                      +--------------+--------------+
-                                                     │ використовує
-+-----------------------------+       +--------------▼--------------+
-|   dialogs.cpp (UI-модуль)   │       │       main.cpp (UI-шар)     |
-|  StudentEditDialog()        |──────▶|  wWinMain, WndProc,         |
-|  StatsDialog()              | діалоги|  RefreshList, SeedDemo      |
-+-----------------------------+       +-----------------------------+
-          Win32 API: DialogBoxParam, ListView_*, MessageBox
-```
+![Діаграма класів](diagrams/class_diagram.png)
 
 `StudentGroup` агрегацією містить `Student` (1..*); UI-шар
-працює з об'єктами лише через публічні методи контейнера.
+(main.cpp + dialogs.cpp) працює з об'єктами лише через публічні
+методи контейнера — залежність спрямована в один бік.
+
+Вихідники діаграми: `diagrams/class_diagram.mmd` (Mermaid),
+`diagrams/class_diagram.drawio` (draw.io).
 
 ## 6. Ілюстрації
 
