@@ -118,6 +118,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             MyEditor::getInstance()->PickFillColor(hWnd);
             InvalidateRect(hWnd, NULL, FALSE);
             break;
+        case IDM_PENCOLOR:
+            MyEditor::getInstance()->PickPenColor(hWnd);
+            InvalidateRect(hWnd, NULL, FALSE);
+            break;
+        case IDM_CLEAR:
+            MyEditor::getInstance()->ClearAll();
+            table.Clear();
+            InvalidateRect(hWnd, NULL, FALSE);
+            break;
         case IDM_VIEW_TABLE:
             table.Activate(hWnd, g_hInst);
             break;
@@ -170,6 +179,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_MOUSEMOVE:
         MyEditor::getInstance()->OnMouseMove(LOWORD(lParam), HIWORD(lParam), hWnd);
+        break;
+
+    case WM_KEYDOWN:
+        if (wParam == VK_DELETE)
+        {
+            MyEditor* editor = MyEditor::getInstance();
+            int removed = editor->DeleteSelected();
+            if (removed >= 0 && table.IsActive())
+                table.Remove(removed);
+            InvalidateRect(hWnd, NULL, FALSE);
+        }
         break;
 
     case WM_LBUTTONUP:

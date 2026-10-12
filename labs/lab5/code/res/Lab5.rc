@@ -7,6 +7,8 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "&Save to File", IDM_FILE_SAVE
+        MENUITEM "&Clear canvas",   IDM_CLEAR
+        MENUITEM SEPARATOR
         MENUITEM "E&xit", IDM_EXIT
     END
     POPUP "&Objects"
@@ -25,6 +27,7 @@ BEGIN
     POPUP "&Tools"
     BEGIN
         MENUITEM "&Fill color...",  IDM_FILLCOLOR
+        MENUITEM "&Pen color...",   IDM_PENCOLOR
     END
     POPUP "&View"
     BEGIN
