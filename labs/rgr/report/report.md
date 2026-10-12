@@ -1,4 +1,4 @@
-<div style="text-align: center; font-size: 24px; margin-top: 60px;">
+﻿<div style="text-align: center; font-size: 24px; margin-top: 60px;">
 
 Міністерство освіти і науки України
 
@@ -1027,7 +1027,7 @@ res/RGR.rc         ── resource.h
 
 ## 5. Діаграма класів
 
-![Діаграма класів](diagrams/class_diagram.png)
+![Діаграма класів Student ↔ StudentGroup ↔ UI](diagrams/class_diagram.png)
 
 `StudentGroup` агрегацією містить `Student` (1..*); UI-шар
 (main.cpp + dialogs.cpp) працює з об'єктами лише через публічні
@@ -1040,12 +1040,12 @@ res/RGR.rc         ── resource.h
 
 ### Рис. 1 — Головне вікно: список групи з сер.балом і статусом
 
-![main](../screenshots/main_list.png)
+![Рис. 1 — Головне вікно: список групи](../screenshots/main_list.png)
 
 ### Рис. 2 — Діалог додавання студента
 
-![add](../screenshots/add_dialog.png)
+![Рис. 2 — Діалог додавання студента](../screenshots/add_dialog.png)
 
 ### Рис. 3 — Діалог статистики групи
 
-![stats](../screenshots/stats_dialog.png)
+![Рис. 3 — Діалог статистики групи](../screenshots/stats_dialog.png)
