@@ -1,7 +1,7 @@
-// Lab5.cpp — main file
+﻿// Lab5.cpp — main file
 // Lab 5: Multi-window UI, Singleton, table, file save
 // Stepanenko Denys, IM-051, 2026
-// Variant: J=16 (even) — classic Singleton
+// Variant: J=13 (odd) — Meyers Singleton
 
 #include <windows.h>
 #include <commctrl.h>
@@ -140,7 +140,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         case IDM_ABOUT:
             MessageBox(hWnd,
-                _T("Lab 5 — Multi-window UI\nStepanenko Denys, IM-051\nJ=16: classic Singleton, independent my_table module"),
+                _T("Lab 5 — Multi-window UI\nStepanenko Denys, IM-051\nJ=13: Meyers Singleton, independent my_table module"),
                 _T("About"), MB_OK | MB_ICONINFORMATION);
             break;
         default:

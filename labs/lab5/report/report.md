@@ -1,4 +1,4 @@
-<div style="text-align: center; font-size: 24px; margin-top: 60px;">
+﻿<div style="text-align: center; font-size: 24px; margin-top: 60px;">
 
 Міністерство освіти і науки України
 
@@ -29,7 +29,7 @@
 <strong>Виконав:</strong><br>
 Степаненко Денис<br>
 студент групи IM-051<br>
-номер у списку групи: 16<br><br>
+номер у списку групи: 13<br><br>
 
 <strong>Перевірив:</strong><br>
 Рекечинський Дмитро Олександрович
@@ -56,9 +56,9 @@
 
 ## Завдання згідно варіанту
 
-Номер у списку: **Ж = 16 (парне)**
+Номер у списку: **Ж = 13 (непарне)**
 
-- **Класична реалізація Singleton** — статичний вказівник `p_instance`, метод `getInstance()` з перевіркою `if (!p_instance) p_instance = new MyEditor()`
+- **Singleton Меєрса** — локальний статичний об'єкт `static MyEditor instance` усередині `getInstance()`; ініціалізація при першому виклику, потокобезпечно з C++11
 - **Незалежний модуль `my_table`** — окремий клас `MyTable` зі своїм `.rc` файлом, не залежить від інших модулів проєкту (не включає їхні `.h` файли)
 - **Немодальне вікно таблиці** — `CreateDialog` замість `DialogBox`, обробка через `IsDialogMessage` у циклі повідомлень
 - **Запис об'єктів у файл** — tab-separated формат: `назва\tx1\ty1\tx2\ty2`
@@ -161,7 +161,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 class MyEditor
 {
 private:
-    static MyEditor* p_instance;
     Shape* pcshape[N];
     int shapeCount;
     int currentType;
@@ -190,16 +189,13 @@ public:
 };
 ```
 
-### MyEditor — my_editor.cpp (Singleton + SaveToFile)
+### MyEditor — my_editor.cpp (Singleton Меєрса + SaveToFile)
 
 ```cpp
-MyEditor* MyEditor::p_instance = nullptr;
-
 MyEditor* MyEditor::getInstance()
 {
-    if (!p_instance)
-        p_instance = new MyEditor();
-    return p_instance;
+    static MyEditor instance;   // Meyers: function-local static, C++11 thread-safe
+    return &instance;
 }
 
 void MyEditor::SaveToFile(const wchar_t* filename)
@@ -313,7 +309,7 @@ my_table.rc
 ┌──────────────────────────────┐
 │   MyEditor (Singleton)       │
 ├──────────────────────────────┤
-│ - p_instance: static MyEd*   │  ← lazy init
+│ - instance: static (Meyers)  │  ← static у getInstance()
 │ - pcshape[N]: Shape*         │
 │ - shapeCount: int            │
 │ - currentType: int           │
@@ -477,7 +473,7 @@ _Рис. 9. Рядок «Line» зник із таблиці разом із ф�
 
 ## Висновки
 
-У лабораторній роботі я виконав завдання згідно свого варіанту (Ж = 16, парне). Реалізовано класичний патерн Singleton для класу `MyEditor` — приватний конструктор, статичний вказівник `p_instance`, метод `getInstance()` з лінивою ініціалізацією. Копіювання та присвоєвання заборонено через `= delete`.
+У лабораторній роботі я виконав завдання згідно свого варіанту (Ж = 13, непарне). Реалізовано патерн Singleton Меєрса для класу `MyEditor` — приватний конструктор, локальний статичний об'єкт `static MyEditor instance` усередині `getInstance()`, ініціалізація при першому зверненні (з C++11 потокобезпечна). Копіювання та присвоєвання заборонено через `= delete`.
 
 Створено незалежний модуль `my_table` — клас `MyTable` зі своїм файлом ресурсів `.rc`, що не залежить від інших модулів проєкту. Немодальне вікно таблиці створюється через `CreateDialog` і обробляється через `IsDialogMessage` у головному циклі повідомлень — це дозволяє працювати з обома вікнами одночасно.
 

@@ -1,4 +1,4 @@
-// my_editor.cpp — MyEditor classic Singleton implementation
+// my_editor.cpp — MyEditor Meyers Singleton implementation
 #include "my_editor.h"
 #include "point.h"
 #include "line.h"
@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <commdlg.h>
-
-MyEditor* MyEditor::p_instance = nullptr;
 
 MyEditor::MyEditor() : shapeCount(0), currentType(IDM_POINT), isDrawing(false), pTempShape(NULL), pSelected(NULL)
 {
@@ -27,9 +25,8 @@ MyEditor::~MyEditor()
 
 MyEditor* MyEditor::getInstance()
 {
-    if (!p_instance)
-        p_instance = new MyEditor();
-    return p_instance;
+    static MyEditor instance;   // Meyers: function-local static, C++11 thread-safe
+    return &instance;
 }
 
 Shape* MyEditor::CreateShape(int type, int x1, int y1, int x2, int y2)

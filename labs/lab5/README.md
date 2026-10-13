@@ -1,10 +1,10 @@
-# Lab 5 — Multi-window UI, Singleton, Table, File Save
+﻿# Lab 5 — Multi-window UI, Singleton, Table, File Save
 
 ## Topic
 Multi-window interface, Singleton pattern, independent table module, saving objects to file.
 
 ## Variant
-J=16 (even): classic Singleton implementation. Independent `my_table` module (no project dependencies). Non-modal table dialog with listbox. File save (tab-separated: name, x1, y1, x2, y2).
+J=13 (odd): Meyers Singleton (function-local static in getInstance). Independent `my_table` module (no project dependencies). Non-modal table dialog with listbox. File save (tab-separated: name, x1, y1, x2, y2).
 
 ## Structure
 ```

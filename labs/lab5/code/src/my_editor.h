@@ -1,4 +1,4 @@
-// my_editor.h — MyEditor as classic Singleton (J=16 even)
+﻿// my_editor.h — MyEditor as Meyers Singleton (J=13 odd)
 #pragma once
 #include <windows.h>
 #include "shape.h"
@@ -8,7 +8,6 @@
 class MyEditor
 {
 private:
-    static MyEditor* p_instance;
     Shape* pcshape[N];
     int shapeCount;
     int currentType;

@@ -1,4 +1,4 @@
-// rect.cpp — Rectangle: center input (J=17 mod 2=1), gray fill (mod 5=2, mod 6=5)
+// rect.cpp — Rectangle: center input, gray fill — style rules inherited from Lab4
 #include "rect.h"
 
 void RectShape::Show(HDC hdc) {
