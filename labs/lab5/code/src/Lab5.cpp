@@ -108,28 +108,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         SendMessage(hToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
-        TBADDBITMAP tbab;
-        tbab.hInst = HINST_COMMCTRL;
-        tbab.nID = IDB_STD_SMALL_COLOR;
-        SendMessage(hToolBar, TB_ADDBITMAP, 0, (LPARAM)&tbab);
+        // own icon strip: 9 x 16px, magenta = transparent
+        HIMAGELIST himl = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK, 9, 0);
+        HBITMAP hbmTB = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_TOOLBAR));
+        ImageList_AddMasked(himl, hbmTB, RGB(255, 0, 255));
+        DeleteObject(hbmTB);
+        SendMessage(hToolBar, TB_SETIMAGELIST, 0, (LPARAM)himl);
 
-        const int stdBtns[7] = { 6, 3, 4, 5, 8, 7, 9 };
         TBBUTTON tbb[9];
         ZeroMemory(tbb, sizeof(tbb));
         for (int i = 0; i < 7; i++)
         {
-            tbb[i].iBitmap = stdBtns[i];
+            tbb[i].iBitmap = i;
             tbb[i].idCommand = IDM_POINT + i;
             tbb[i].fsState = TBSTATE_ENABLED;
             tbb[i].fsStyle = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
         }
-        // 8th button: select tool (STD_FIND = magnifier icon)
-        tbb[7].iBitmap   = 13;
+        // 8th button: select tool (arrow cursor icon)
+        tbb[7].iBitmap   = 7;
         tbb[7].idCommand = IDM_SELECT;
         tbb[7].fsState   = TBSTATE_ENABLED;
         tbb[7].fsStyle   = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;
-        // 9th button: eraser tool (STD_CUT = scissors icon)
-        tbb[8].iBitmap   = 0;
+        // 9th button: eraser tool (eraser icon)
+        tbb[8].iBitmap   = 8;
         tbb[8].idCommand = IDM_ERASER;
         tbb[8].fsState   = TBSTATE_ENABLED;
         tbb[8].fsStyle   = TBSTYLE_BUTTON | TBSTYLE_CHECK | TBSTYLE_GROUP;

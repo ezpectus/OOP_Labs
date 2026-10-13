@@ -21,3 +21,4 @@
 #define IDM_FILE_LOAD   117
 
 #define IDR_TOOLBAR     200
+#define IDB_TOOLBAR     201
