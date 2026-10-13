@@ -381,35 +381,75 @@ my_table.rc
 
 ## Скріншоти
 
-### Головне вікно з меню View/Table
+### Головне вікно з фігурами
 
 <img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
 
-_Рис. 1. Головне вікно з меню «View → Table» та «File → Save»_
+_Рис. 1. Головне вікно редактора: 7 типів фігур, тулбар, меню «View → Table» та «File → Save»_
 
 ---
 
 ### Немодальне вікно таблиці
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/table_dialog.png" style="width: 100%; max-width: 800px;">
 
-_Рис. 2. Немодальне вікно таблиці об'єктів (listbox з координатами)_
+_Рис. 2. Немодальне вікно таблиці об'єктів — рядки додаються автоматично при створенні фігури, колонки name / x1 / y1 / x2 / y2_
 
 ---
 
 ### Головне вікно + таблиця одночасно
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/main_plus_table.png" style="width: 100%; max-width: 800px;">
 
-_Рис. 3. Багатовіконний інтерфейс — головне вікно та таблиця одночасно_
+_Рис. 3. Багатовіконний інтерфейс — головне вікно та таблиця працюють одночасно_
 
 ---
 
 ### Збереження у файл
 
-<img src="../screenshots/main_with_some_figures.png" style="width: 100%; max-width: 800px;">
+<img src="../screenshots/final_state.png" style="width: 100%; max-width: 800px;">
 
-_Рис. 4. Збереження об'єктів у файл shapes.txt (tab-separated)_
+_Рис. 4. File → Save записує об'єкти у shapes.txt у tab-separated форматі (`name\tx1\ty1\tx2\ty2`)_
+
+---
+
+### Інструмент «Вибір» — рамка навколо обраної фігури
+
+<img src="../screenshots/select_frame.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 5. Select: клік по еліпсу → червона пунктирна рамка (`HitTest` + `GetBounds`)_
+
+---
+
+### Діалог вибору кольору заливки
+
+<img src="../screenshots/fill_dialog.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 6. Tools → Fill color → стандартний діалог `ChooseColor`_
+
+---
+
+### Заливка застосована до обраної фігури
+
+<img src="../screenshots/fill_applied.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 7. Після вибору кольору обраний еліпс залито (`SetFillColor` + `m_hasFill`)_
+
+---
+
+### Інструмент «Губка» — видалення фігури
+
+<img src="../screenshots/eraser_after.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 8. Губка видалила лінію (клік по фігурі → `HitTest` зверху-вниз → delete + зсув масиву)_
+
+---
+
+### Таблиця синхронізована після видалення
+
+<img src="../screenshots/table_after_erase.png" style="width: 100%; max-width: 800px;">
+
+_Рис. 9. Рядок «Line» зник із таблиці разом із фігурою (`MyTable::Remove` → `LB_DELETESTRING`)_
 
 ---
 
