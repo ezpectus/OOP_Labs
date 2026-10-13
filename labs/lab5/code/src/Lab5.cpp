@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <commctrl.h>
 #include <tchar.h>
+#include <stdio.h>
 #include "resource.h"
 #include "my_editor.h"
 #include "my_table.h"

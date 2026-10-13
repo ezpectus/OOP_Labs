@@ -9,6 +9,7 @@
 #include "triangle.h"
 #include "resource.h"
 #include <stdio.h>
+#include <tchar.h>
 #include <commdlg.h>
 
 MyEditor* MyEditor::p_instance = nullptr;

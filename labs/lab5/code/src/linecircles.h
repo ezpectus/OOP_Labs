@@ -46,4 +46,8 @@ public:
     }
 
     const wchar_t* GetName() const override { return L"LineCirc"; }
+
+    // MI disambiguation: two parents override HitTest — pick Line's
+    // (the line is the dominant body of this figure)
+    bool HitTest(int x, int y) const override { return LineShape::HitTest(x, y); }
 };
