@@ -58,4 +58,8 @@ public:
     }
 
     const wchar_t* GetName() const override { return L"Cube"; }
+
+    // MI disambiguation + UX: use the rect's bounding-box hit test —
+    // LineShape::HitTest would only accept clicks near the diagonal
+    bool HitTest(int x, int y) const override { return RectShape::HitTest(x, y); }
 };
