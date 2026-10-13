@@ -109,7 +109,7 @@ static void SendParams(HWND hWnd)
     params.hWndSender = hWnd;
 
     if (params.n <= 0)  params.n = 5;
-    if (params.n > 20)  params.n = 20;          // display keeps it sane
+    if (params.n > 20)  params.n = 20;          // display keeps it same
     if (params.maxVal <= params.minVal) params.maxVal = params.minVal + 1;
 
     if (!hObj2) hObj2 = FindWindow(_T("Object2Class"), NULL);
