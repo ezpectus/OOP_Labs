@@ -10,6 +10,7 @@
 
 #include <windows.h>
 #include <commctrl.h>
+#include <commdlg.h>
 #include <tchar.h>
 #include <stdio.h>
 #include "resource.h"
@@ -176,14 +177,39 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (table.IsActive()) SyncTableToEditor();  // opened after load — fill rows
             break;
         case IDM_FILE_SAVE:
-            MyEditor::getInstance()->SaveToFile(L"shapes.txt");
-            MessageBox(hWnd, _T("Saved to shapes.txt"), _T("File"), MB_OK);
+        {
+            // common Save dialog: user picks folder + types the file name
+            wchar_t path[MAX_PATH] = L"shapes.txt";
+            OPENFILENAMEW ofn = {};
+            ofn.lStructSize = sizeof(ofn);
+            ofn.hwndOwner   = hWnd;
+            ofn.lpstrFile   = path;
+            ofn.nMaxFile    = MAX_PATH;
+            ofn.lpstrFilter = L"Text files (*.txt)\0*.txt\0All files (*.*)\0*.*\0";
+            ofn.lpstrDefExt = L"txt";
+            ofn.Flags       = OFN_OVERWRITEPROMPT;
+            if (GetSaveFileNameW(&ofn))
+            {
+                MyEditor::getInstance()->SaveToFile(path);
+                MessageBox(hWnd, _T("Saved"), _T("File"), MB_OK);
+            }
             break;
+        }
         case IDM_FILE_LOAD:
         {
-            int n = MyEditor::getInstance()->LoadFromFile(L"shapes.txt");
+            // common Open dialog: user picks the file to load shapes from
+            wchar_t path[MAX_PATH] = L"";
+            OPENFILENAMEW ofn = {};
+            ofn.lStructSize = sizeof(ofn);
+            ofn.hwndOwner   = hWnd;
+            ofn.lpstrFile   = path;
+            ofn.nMaxFile    = MAX_PATH;
+            ofn.lpstrFilter = L"Text files (*.txt)\0*.txt\0All files (*.*)\0*.*\0";
+            ofn.Flags       = OFN_FILEMUSTEXIST;
+            if (!GetOpenFileNameW(&ofn)) break;
+            int n = MyEditor::getInstance()->LoadFromFile(path);
             if (n < 0)
-                MessageBox(hWnd, _T("Cannot open shapes.txt"), _T("File"),
+                MessageBox(hWnd, _T("Cannot open file"), _T("File"),
                     MB_OK | MB_ICONWARNING);
             else
             {

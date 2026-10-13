@@ -128,12 +128,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (table.IsActive()) SyncTableToEditor();
             break;
         case IDM_FILE_SAVE:
-            MyEditor::getInstance()->SaveToFile(L"shapes.txt");
-            MessageBox(hWnd, _T("Saved to shapes.txt"), _T("File"), MB_OK);
+        {
+            // common Save dialog: pick folder + type file name
+            wchar_t path[MAX_PATH] = L"shapes.txt";
+            OPENFILENAMEW ofn = {};
+            ofn.lStructSize = sizeof(ofn);  ofn.hwndOwner = hWnd;
+            ofn.lpstrFile = path;  ofn.nMaxFile = MAX_PATH;
+            ofn.lpstrFilter = L"Text files (*.txt)\0*.txt\0...\0";
+            ofn.lpstrDefExt = L"txt";
+            ofn.Flags = OFN_OVERWRITEPROMPT;
+            if (GetSaveFileNameW(&ofn))
+                MyEditor::getInstance()->SaveToFile(path);
             break;
+        }
         case IDM_FILE_LOAD:
         {
-            int n = MyEditor::getInstance()->LoadFromFile(L"shapes.txt");
+            // common Open dialog: pick the file to load from
+            OPENFILENAMEW ofn = {};  /* same fields, OFN_FILEMUSTEXIST */
+            if (!GetOpenFileNameW(&ofn)) break;
+            int n = MyEditor::getInstance()->LoadFromFile(path);
             if (n >= 0) { SyncTableToEditor(); InvalidateRect(hWnd, NULL, FALSE); }
             break;
         }
@@ -497,7 +510,19 @@ _Рис. 3. Багатовіконний інтерфейс — головне �
 
 ![](../screenshots/final_state.png)
 
-_Рис. 4. File → Save записує об'єкти у shapes.txt у tab-separated форматі (`name\tx1\ty1\tx2\ty2`)_
+_Рис. 4a. File → Save: об'єкти записуються у файл у tab-separated форматі (`name\tx1\ty1\tx2\ty2`)_
+
+### Діалог «Зберегти як» — вибір теки та імені файлу
+
+![](../screenshots/save_dialog.png)
+
+_Рис. 4b. `GetSaveFileNameW` (OPENFILENAME) — користувач обирає теку і вводить ім'я; `OFN_OVERWRITEPROMPT` питає про перезапис_
+
+### Діалог «Відкрити» — вибір файлу для завантаження
+
+![](../screenshots/open_dialog.png)
+
+_Рис. 4c. `GetOpenFileNameW` з `OFN_FILEMUSTEXIST` — завантаження фігур із вибраного файлу_
 
 ---
 
