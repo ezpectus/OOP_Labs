@@ -1,56 +1,27 @@
 ============================================================
-  ЗАПУСК ПРОГРАМ — копировать строку, вставить в cmd, Enter
-  (cmd открыть В КОРНЕ репо: F:\VSC projects\OOP_Labs)
+  ЗАПУСК — exe уже собраны. Копировать строку в PowerShell:
 ============================================================
 
---- ЛАБА 5 (Singleton + многооконный редактор) ----------------
-build-lab.bat 5 run
-
---- ЛАБА 6 (3 окна: менеджер + матрица + детерминант) ----------
-build-lab.bat 6 run
-:: собирает Lab6 + Object2 + Object3 и запускает менеджер.
-:: В менеджере: ввести n, Min, Max -> кнопка "Run system".
-
---- РГР (список студентов, вариант 13) ------------------------
-build-lab.bat rgr run
-
---- ЛАБЫ 1-4 (если спросит) -----------------------------------
-build-lab.bat 1 run
-build-lab.bat 2 run
-build-lab.bat 3 run
-build-lab.bat 4 run
-
-============================================================
-  ЗАПАСНОЙ ВАРИАНТ — exe уже собраны, запуск двойным кликом:
-============================================================
 labs\lab5\code\src\Lab5.exe
 labs\lab6\code\src\Lab6\Lab6.exe        (менеджер, стартует 2 окна сам)
 labs\rgr\code\src\RGR.exe
 
 ============================================================
-  ЗВІТИ (pdf, показать преподу):
+  ПЕРЕСБОРКА (если попросит собрать — в PowerShell с .\):
 ============================================================
-labs\lab5\report\report.pdf
-labs\lab6\report\report.pdf
-labs\rgr\report\report.pdf
+
+.\build-lab.bat 5 run
+.\build-lab.bat 6 run        (собирает все 3 программы)
+.\build-lab.bat rgr run
 
 ============================================================
-  ЧТО ПОКАЗЫВАТЬ В КОДЕ (если спросит):
+  ФАЙЛЫ КОДА (если попросит показать):
 ============================================================
+
 Lab5: labs\lab5\code\src\Lab5.cpp
-      - Meyers singleton (getInstance, static внутри)
-      - Shape база + HitTest/GetBounds, select/fill/eraser
-      - modeless таблица, TableRowCallback, save/load файла
-Lab6: labs\lab6\code\src\Lab6\Lab6.cpp   - менеджер (WinExec, WM_COPYDATA)
-      labs\lab6\code\src\Object2\Object2.cpp - матрица + Clipboard
-      labs\lab6\code\src\Object3\Object3.cpp - детерминант Гаусса
-RGR:  labs\rgr\code\src\
-      student.h/.cpp        - класс Student (avg, hasDebt, isExcellent, CSV)
-      student_group.h/.cpp  - контейнер vector<Student>, статистика, файл
-      main.cpp              - окно + ListView + меню
-      dialogs.cpp           - модальные диалоги Add/Edit/Stats
-
-============================================================
-  ЕСЛИ БИЛД РУГАЕТСЯ: MinGW g++ должен быть в PATH
-  (проверка: g++ --version)
-============================================================
+Lab6: labs\lab6\code\src\Lab6\Lab6.cpp      (менеджер)
+      labs\lab6\code\src\Object2\Object2.cpp (матрица)
+      labs\lab6\code\src\Object3\Object3.cpp (детерминант)
+RGR:  labs\rgr\code\src\student.h / student.cpp
+      labs\rgr\code\src\student_group.h / student_group.cpp
+      labs\rgr\code\src\main.cpp / dialogs.cpp
