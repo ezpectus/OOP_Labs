@@ -1,0 +1,6 @@
+LineCirc	54	92	463	411
+LineCirc	409	172	133	395
+LineCirc	154	94	560	451
+Ellipse	141	110	621	380
+Ellipse	277	42	376	364
+Triangle	399	63	643	441
