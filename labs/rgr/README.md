@@ -23,8 +23,9 @@ code/src/dialogs.h/.cpp        — модальні діалоги (Add/Edit, St
 code/src/main.cpp              — WinMain, WndProc, ListView, меню
 code/src/resource.h            — ідентифікатори
 code/res/RGR.rc                — меню + шаблони діалогів
-screenshots/                   — скриншоти програми
-report/report.md               — звіт
+screenshots/                   — скриншоти програми (11)
+report/report.md/.pdf          — звіт (27 ст.)
+report/diagrams/               — діаграма класів (.mmd/.drawio/.png)
 ```
 
 ## Збірка (MinGW)
