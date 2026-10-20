@@ -24,7 +24,6 @@ public:
     const std::wstring& getName()   const { return name; }
     const std::wstring& getBookNo() const { return bookNo; }
     int getGrade(int i) const;
-    const int* getGrades() const { return grades; }
 
     void setName(const std::wstring& v)   { name = v; }
     void setBookNo(const std::wstring& v) { bookNo = v; }

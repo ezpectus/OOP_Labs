@@ -68,6 +68,8 @@ bool Student::fromCSV(const std::wstring& line)
     for (int i = 0; i < GRADE_COUNT; i++)
     {
         if (!std::getline(ss, field, L';')) return false;
+        if (field.find_first_not_of(L"0123456789") != std::wstring::npos)
+            return false;                    // non-numeric grade = not our file
         setGrade(i, _wtoi(field.c_str()));   // clamp 0..100, not raw assign
     }
     return true;

@@ -5,7 +5,7 @@
 // Сортування/Статистика. Діалоги Add/Edit — окремий модуль.
 //
 // Build & run (MinGW, з папки code\src):
-//   g++ -c -std=c++14 -DUNICODE -D_UNICODE *.cpp
+//   g++ -c -std=c++17 -DUNICODE -D_UNICODE *.cpp
 //   windres -c 65001 --output-format=coff -I . -i ..\res\RGR.rc -o RGR.res.o
 //   g++ -mwindows -municode *.o -o RGR.exe -lcomctl32
 //   .\RGR.exe
@@ -57,7 +57,7 @@ static void InitListView(HWND hList)
     }
 }
 
-static void RefreshList()
+static void RefreshList(int keepRow = -1)
 {
     ListView_DeleteAllItems(g_hList);
     wchar_t buf[32];
@@ -88,6 +88,10 @@ static void RefreshList()
                                 (s->hasDebt()   ? L"Борги" : L"ОК");
         ListView_SetItemText(g_hList, (int)i, 9, const_cast<LPWSTR>(status));
     }
+    // restore selection after rebuild (edit/delete keep the row in context)
+    if (keepRow >= 0 && keepRow < (int)g_group.size())
+        ListView_SetItemState(g_hList, keepRow,
+            LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
 }
 
 static int SelectedRow()
@@ -150,6 +154,7 @@ static bool ConfirmClose(HWND hWnd)
 
 static void DoOpen(HWND hWnd)
 {
+    if (!ConfirmClose(hWnd)) return;   // unsaved changes? save/discard/cancel first
     wchar_t path[MAX_PATH] = L"";
     OPENFILENAMEW ofn = {};
     ofn.lStructSize = sizeof(ofn);
@@ -178,7 +183,7 @@ static void DoAdd(HWND hWnd)
     {
         g_group.add(s);
         g_dirty = true;
-        RefreshList();
+        RefreshList((int)g_group.size() - 1);   // select the new row
     }
 }
 
@@ -191,7 +196,7 @@ static void DoEdit(HWND hWnd)
     {
         g_group.updateAt((size_t)row, s);
         g_dirty = true;
-        RefreshList();
+        RefreshList(row);                        // keep edited row selected
     }
 }
 
@@ -204,7 +209,7 @@ static void DoRemove(HWND hWnd)
     {
         g_group.removeAt((size_t)row);
         g_dirty = true;
-        RefreshList();
+        RefreshList(row > 0 ? row - 1 : 0);      // select the neighbour
     }
 }
 
@@ -224,7 +229,7 @@ static void SeedDemo()
     for (int i = 0; i < 5; i++)
     {
         Student s(names[i], books[i]);
-        for (int g = 0; g < 5; g++) s.setGrade(g, gr[i][g]);
+        for (int g = 0; g < Student::GRADE_COUNT; g++) s.setGrade(g, gr[i][g]);
         g_group.add(s);
     }
 }
@@ -275,10 +280,10 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         switch (LOWORD(wp))
         {
         case IDM_FILE_NEW:
-            // dirty only if there was something to lose
-            if (g_group.size() > 0 || g_filePath[0]) g_dirty = true;
+            if (!ConfirmClose(hWnd)) return 0;   // protect unsaved list
             g_group.clear();
             g_filePath[0] = 0;
+            g_dirty = false;
             RefreshList();
             UpdateTitle(hWnd);
             return 0;
