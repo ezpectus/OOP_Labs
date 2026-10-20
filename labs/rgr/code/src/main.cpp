@@ -115,6 +115,7 @@ static bool AskSavePath(HWND hWnd)
     ofn.lpstrFile = path;
     ofn.nMaxFile = MAX_PATH;
     ofn.lpstrFilter = L"CSV файли (*.csv)\0*.csv\0Усі файли (*.*)\0*.*\0";
+    ofn.lpstrDefExt = L"csv";
     ofn.Flags = OFN_OVERWRITEPROMPT;
     if (!GetSaveFileNameW(&ofn)) return false;
     wcscpy_s(g_filePath, path);
@@ -231,6 +232,15 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 
     case WM_KEYDOWN:
         if (wp == VK_DELETE) DoRemove(hWnd);
+        return 0;
+
+    case WM_NOTIFY:
+        // focus usually sits on the ListView, so VK_DELETE arrives
+        // there, not at WndProc — ListView forwards it as LVN_KEYDOWN
+        if (((LPNMHDR)lp)->code == LVN_KEYDOWN
+            && ((LPNMHDR)lp)->idFrom == IDC_LIST
+            && ((LPNMLVKEYDOWN)lp)->wVKey == VK_DELETE)
+            DoRemove(hWnd);
         return 0;
 
     case WM_COMMAND:
