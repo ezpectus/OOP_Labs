@@ -1,27 +1,3 @@
-============================================================
-  ЗАПУСК — exe уже собраны. Копировать строку в PowerShell:
-============================================================
-
-labs\lab5\code\src\Lab5.exe
-labs\lab6\code\src\Lab6\Lab6.exe        (менеджер, стартует 2 окна сам)
-labs\rgr\code\src\RGR.exe
-
-============================================================
-  ПЕРЕСБОРКА (если попросит собрать — в PowerShell с .\):
-============================================================
-
-.\build-lab.bat 5 run
-.\build-lab.bat 6 run        (собирает все 3 программы)
-.\build-lab.bat rgr run
-
-============================================================
-  ФАЙЛЫ КОДА (если попросит показать):
-============================================================
-
-Lab5: labs\lab5\code\src\Lab5.cpp
-Lab6: labs\lab6\code\src\Lab6\Lab6.cpp      (менеджер)
-      labs\lab6\code\src\Object2\Object2.cpp (матрица)
-      labs\lab6\code\src\Object3\Object3.cpp (детерминант)
-RGR:  labs\rgr\code\src\student.h / student.cpp
-      labs\rgr\code\src\student_group.h / student_group.cpp
-      labs\rgr\code\src\main.cpp / dialogs.cpp
+Rectangle	91	91	537	386
+Rectangle	122	71	425	441
+LineCirc	122	62	616	461
