@@ -105,8 +105,14 @@ void MyEditor::OnMouseUp(int x, int y)
         {
             int x1, y1, x2, y2;
             pTempShape->GetCoords(x1, y1, x2, y2);
-            pcshape[shapeCount] = CreateShape(currentType, x1, y1, x2, y2);
-            shapeCount++;
+            // skip zero-size junk: a click without drag must not create
+            // invisible rect/ellipse/line (Point is the only 0-size shape)
+            bool zeroSize = (x1 == x2 && y1 == y2);
+            if (!(zeroSize && currentType != IDM_POINT))
+            {
+                pcshape[shapeCount] = CreateShape(currentType, x1, y1, x2, y2);
+                shapeCount++;
+            }
         }
         delete pTempShape;
         pTempShape = NULL;
@@ -251,6 +257,7 @@ int MyEditor::LoadFromFile(const wchar_t* filename)
     FILE* fin;
     if (_wfopen_s(&fin, filename, L"rt") != 0 || !fin) return -1;
 
+    ClearAll();     
     int loaded = 0;
     wchar_t buf[256];
     while (fgetws(buf, 256, fin) && shapeCount < N)

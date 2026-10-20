@@ -256,6 +256,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_LBUTTONDOWN:
     {
+        SetCapture(hWnd);   // keep getting WM_LBUTTONUP even outside the window
         MyEditor* editor = MyEditor::getInstance();
         int removed = editor->OnMouseDown(LOWORD(lParam), HIWORD(lParam));
         if (removed >= 0 && table.IsActive())
@@ -281,6 +282,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_LBUTTONUP:
     {
+        ReleaseCapture();
         MyEditor* editor = MyEditor::getInstance();
         int prevCount = editor->GetCount();
         editor->OnMouseUp(LOWORD(lParam), HIWORD(lParam));

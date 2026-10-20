@@ -2,7 +2,16 @@
 #include "point.h"
 
 void PointShape::Show(HDC hdc) {
-    SetPixel(hdc, x1, y1, m_penColor);
+    // visible dot ~7px instead of a single pixel
+    HPEN pen = CreatePen(PS_SOLID, 1, m_penColor);
+    HBRUSH br = CreateSolidBrush(m_penColor);
+    HGDIOBJ op = SelectObject(hdc, pen);
+    HGDIOBJ ob = SelectObject(hdc, br);
+    Ellipse(hdc, x1 - 3, y1 - 3, x1 + 3, y1 + 3);
+    SelectObject(hdc, ob);
+    SelectObject(hdc, op);
+    DeleteObject(br);
+    DeleteObject(pen);
 }
 
 bool PointShape::HitTest(int x, int y) const {
