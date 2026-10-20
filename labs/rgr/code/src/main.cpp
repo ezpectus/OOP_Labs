@@ -275,9 +275,10 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         switch (LOWORD(wp))
         {
         case IDM_FILE_NEW:
+            // dirty only if there was something to lose
+            if (g_group.size() > 0 || g_filePath[0]) g_dirty = true;
             g_group.clear();
             g_filePath[0] = 0;
-            g_dirty = true;
             RefreshList();
             UpdateTitle(hWnd);
             return 0;
@@ -329,7 +330,11 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, PWSTR, int nCmdShow)
     INITCOMMONCONTROLSEX icc = {};
     icc.dwSize = sizeof(icc);
     icc.dwICC = ICC_LISTVIEW_CLASSES;
-    InitCommonControlsEx(&icc);
+    if (!InitCommonControlsEx(&icc))
+    {
+        MessageBoxW(nullptr, L"Common controls init failed", L"Error", MB_ICONERROR);
+        return 0;
+    }
 
     const wchar_t* cls = L"RGR_GroupList";
     WNDCLASSEXW wc = {};
@@ -340,11 +345,16 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, PWSTR, int nCmdShow)
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wc.lpszClassName = cls;
     wc.lpszMenuName = L"RGR_MENU";
-    RegisterClassExW(&wc);
+    if (!RegisterClassExW(&wc))
+    {
+        MessageBoxW(nullptr, L"Window class registration failed", L"Error", MB_ICONERROR);
+        return 0;
+    }
 
     HWND hWnd = CreateWindowExW(0, cls, L"Група студентів",
         WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
         720, 420, nullptr, nullptr, hInst, nullptr);
+    if (!hWnd) return 0;
     ShowWindow(hWnd, nCmdShow);
 
     MSG m;

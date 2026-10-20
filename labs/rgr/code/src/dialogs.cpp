@@ -114,6 +114,12 @@ static INT_PTR CALLBACK StatsDlgProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 
 void StatsDialog(HWND hOwner, const StudentGroup& group)
 {
+    if (group.size() == 0)
+    {
+        MessageBoxW(hOwner, L"Список порожній — статистики немає.",
+                    L"Статистика", MB_OK | MB_ICONINFORMATION);
+        return;
+    }
     std::wstringstream ss;
     ss.setf(std::ios::fixed); ss.precision(2);
     ss << L"Студентів у групі:  " << group.size() << L"\r\n";
