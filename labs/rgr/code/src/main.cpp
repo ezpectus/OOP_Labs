@@ -31,6 +31,7 @@
 static StudentGroup g_group;
 static HWND g_hList = nullptr;
 static wchar_t g_filePath[MAX_PATH] = L"";
+static bool g_dirty = false;   // unsaved changes -> guard on close
 
 // ---------- ListView ----------
 
@@ -122,14 +123,29 @@ static bool AskSavePath(HWND hWnd)
     return true;
 }
 
-static void DoSave(HWND hWnd, bool saveAs)
+static bool DoSave(HWND hWnd, bool saveAs)
 {
     if (saveAs || !g_filePath[0])
-        if (!AskSavePath(hWnd)) return;
+        if (!AskSavePath(hWnd)) return false;
     if (g_group.saveToFile(g_filePath))
+    {
+        g_dirty = false;
         UpdateTitle(hWnd);
-    else
-        MessageBoxW(hWnd, L"Не вдалося зберегти файл!", L"Помилка", MB_ICONERROR);
+        return true;
+    }
+    MessageBoxW(hWnd, L"Не вдалося зберегти файл!", L"Помилка", MB_ICONERROR);
+    return false;
+}
+
+// yes/no/cancel on unsaved changes; true = safe to close
+static bool ConfirmClose(HWND hWnd)
+{
+    if (!g_dirty) return true;
+    int r = MessageBoxW(hWnd, L"Є незбережені зміни. Зберегти файл?",
+                        L"Вихід", MB_YESNOCANCEL | MB_ICONQUESTION);
+    if (r == IDCANCEL) return false;
+    if (r == IDNO) return true;
+    return DoSave(hWnd, false);   // yes, but stays open if save was cancelled
 }
 
 static void DoOpen(HWND hWnd)
@@ -147,6 +163,7 @@ static void DoOpen(HWND hWnd)
     if (g_group.loadFromFile(path))
     {
         wcscpy_s(g_filePath, path);
+        g_dirty = false;
         RefreshList();
         UpdateTitle(hWnd);
     }
@@ -160,6 +177,7 @@ static void DoAdd(HWND hWnd)
     if (StudentEditDialog(hWnd, L"Додати студента", s))
     {
         g_group.add(s);
+        g_dirty = true;
         RefreshList();
     }
 }
@@ -172,6 +190,7 @@ static void DoEdit(HWND hWnd)
     if (StudentEditDialog(hWnd, L"Редагувати студента", s))
     {
         g_group.updateAt((size_t)row, s);
+        g_dirty = true;
         RefreshList();
     }
 }
@@ -184,6 +203,7 @@ static void DoRemove(HWND hWnd)
                     L"Підтвердження", MB_YESNO | MB_ICONQUESTION) == IDYES)
     {
         g_group.removeAt((size_t)row);
+        g_dirty = true;
         RefreshList();
     }
 }
@@ -237,11 +257,19 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
     case WM_NOTIFY:
         // focus usually sits on the ListView, so VK_DELETE arrives
         // there, not at WndProc — ListView forwards it as LVN_KEYDOWN
-        if (((LPNMHDR)lp)->code == LVN_KEYDOWN
-            && ((LPNMHDR)lp)->idFrom == IDC_LIST
+    {
+        LPNMHDR nm = (LPNMHDR)lp;
+        // focus usually sits on the ListView, so VK_DELETE arrives
+        // there, not at WndProc — ListView forwards it as LVN_KEYDOWN
+        if (nm->code == LVN_KEYDOWN
+            && nm->idFrom == IDC_LIST
             && ((LPNMLVKEYDOWN)lp)->wVKey == VK_DELETE)
             DoRemove(hWnd);
+        // double-click a row -> edit that student
+        if (nm->code == NM_DBLCLK && nm->idFrom == IDC_LIST)
+            DoEdit(hWnd);
         return 0;
+    }
 
     case WM_COMMAND:
         switch (LOWORD(wp))
@@ -249,22 +277,27 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         case IDM_FILE_NEW:
             g_group.clear();
             g_filePath[0] = 0;
+            g_dirty = true;
             RefreshList();
             UpdateTitle(hWnd);
             return 0;
         case IDM_FILE_OPEN:   DoOpen(hWnd);            return 0;
         case IDM_FILE_SAVE:   DoSave(hWnd, false);     return 0;
         case IDM_FILE_SAVEAS: DoSave(hWnd, true);      return 0;
-        case IDM_FILE_EXIT:   DestroyWindow(hWnd);     return 0;
+        case IDM_FILE_EXIT:
+            if (ConfirmClose(hWnd)) DestroyWindow(hWnd);
+            return 0;
         case IDM_ST_ADD:      DoAdd(hWnd);             return 0;
         case IDM_ST_EDIT:     DoEdit(hWnd);            return 0;
         case IDM_ST_REMOVE:   DoRemove(hWnd);          return 0;
         case IDM_SORT_AVG:
             g_group.sortByAvg(false);
+            g_dirty = true;
             RefreshList();
             return 0;
         case IDM_SORT_NAME:
             g_group.sortByName();
+            g_dirty = true;
             RefreshList();
             return 0;
         case IDM_STATS_SHOW:  StatsDialog(hWnd, g_group); return 0;
@@ -277,6 +310,10 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             return 0;
         }
         break;
+
+    case WM_CLOSE:                 // window X / Alt-F4
+        if (ConfirmClose(hWnd)) DestroyWindow(hWnd);
+        return 0;
 
     case WM_DESTROY:
         PostQuitMessage(0);

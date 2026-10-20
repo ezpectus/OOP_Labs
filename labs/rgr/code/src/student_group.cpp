@@ -92,7 +92,7 @@ bool StudentGroup::saveToFile(const std::wstring& path) const
     f << L"Name;BookNo;G1;G2;G3;G4;G5\n";
     for (const auto& s : students)
         f << s.toCSV() << L'\n';
-    return true;
+    return f.good();   // disk full / write error -> false -> error box in UI
 }
 
 bool StudentGroup::loadFromFile(const std::wstring& path)
@@ -101,9 +101,12 @@ bool StudentGroup::loadFromFile(const std::wstring& path)
     if (!f.is_open()) return false;
     f.imbue(std::locale(f.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 
-    students.clear();
+    // parse into a temp list first: a corrupt file must not wipe
+    // the group that is already loaded in memory
+    std::vector<Student> tmp;
     std::wstring line;
     bool first = true;
+    int dataLines = 0;
     while (std::getline(f, line))
     {
         if (first)   // заголовок (і BOM) пропускаємо
@@ -113,8 +116,11 @@ bool StudentGroup::loadFromFile(const std::wstring& path)
             if (line.find(L"Name") == 0) continue;
         }
         if (line.empty()) continue;
+        dataLines++;
         Student s;
-        if (s.fromCSV(line)) students.push_back(s);
+        if (s.fromCSV(line)) tmp.push_back(s);
     }
+    if (dataLines > 0 && tmp.empty()) return false;   // файл не наш формат
+    students.swap(tmp);
     return true;
 }

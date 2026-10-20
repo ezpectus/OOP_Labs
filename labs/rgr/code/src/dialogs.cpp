@@ -59,6 +59,11 @@ static INT_PTR CALLBACK StudentDlgProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp
                 MessageBoxW(hDlg, L"Введіть ПІБ студента!", L"Помилка", MB_ICONWARNING);
                 return TRUE;
             }
+            if (s.getBookNo().empty())
+            {
+                MessageBoxW(hDlg, L"Введіть номер залікової книжки!", L"Помилка", MB_ICONWARNING);
+                return TRUE;
+            }
             *ctx->result = s;
             ctx->ok = TRUE;
             EndDialog(hDlg, IDOK);
